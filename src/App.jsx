@@ -1,16 +1,9 @@
-import React, { useEffect } from 'react';
-import {
-  Routes,
-  Route,
-  useLocation
-} from 'react-router-dom';
+import { useEffect } from 'react';
+import { useLocation } from "react-router-dom";
+import AppRoutes from './routes';
 
 import './css/style.css';
 
-import './charts/ChartjsConfig';
-
-// Import pages
-import Dashboard from './pages/Dashboard';
 
 function App() {
 
@@ -23,11 +16,7 @@ function App() {
   }, [location.pathname]); // triggered on route change
 
   return (
-    <>
-      <Routes>
-        <Route exact path="/" element={<Dashboard />} />
-      </Routes>
-    </>
+      <AppRoutes/>
   );
 }
 

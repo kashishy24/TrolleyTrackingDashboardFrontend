@@ -1,4 +1,4 @@
-import { Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import PrivateRoute from "../pages/PrivateRoute.jsx";
 
 // pages
@@ -10,14 +10,15 @@ import PMStatus from "../pages/PMStatus.jsx";
 import HCStatus from "../pages/HCStatus.jsx";
 import SparePart from "../pages/SparePart.jsx";
 import MouldSummary from "../pages/MouldSummary.jsx";
+import HCHistory from "../pages/MouldMaintenanceHistory/HCHistory.jsx";
+import MouldBreakdownHistory from "../pages/MouldMaintenanceHistory/BreakDownHistory.jsx";
+import MouldSparePartHistory from "../pages/MouldMaintenanceHistory/SparePartHistory.jsx";
 
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* Default route → open Login first */}
       <Route path="/" element={<Login />} />
 
-      {/* After login, each route should be protected */}
       <Route
         path="/home"
         element={
@@ -72,7 +73,34 @@ export default function AppRoutes() {
         }
       />
 
-      {/* Catch-all for undefined routes */}
+      <Route
+        path="/HCHistory"
+        element={
+          <PrivateRoute>
+            <HCHistory />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/MouldBreakdownHistory"
+        element={
+          <PrivateRoute>
+            <MouldBreakdownHistory />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/MouldSparePartHistory"
+        element={
+          <PrivateRoute>
+            <MouldSparePartHistory />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Catch-all route */}
       <Route path="*" element={<Error />} />
     </Routes>
   );

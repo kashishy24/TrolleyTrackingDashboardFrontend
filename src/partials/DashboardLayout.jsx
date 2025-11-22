@@ -34,9 +34,9 @@ export default function DashboardLayout({ children }) {
             </h1>
         
             {/* Filters - full width on small, auto on md+ */}
-            <div className="w-auto md:w-full">
+            {/* <div className="w-auto md:w-full">
               <DashboardFilters onFilterChange={handleFilterChange} />
-            </div>
+            </div> */}
           </div>
         </div>
 

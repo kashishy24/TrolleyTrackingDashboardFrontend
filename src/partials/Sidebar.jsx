@@ -95,21 +95,14 @@ function Sidebar({
         <div className="space-y-8">
           {/* Pages group */}
           <div>
-            <h3 className="text-xs uppercase text-gray-400 dark:text-gray-500 font-semibold pl-3">
-              <span className="hidden lg:block lg:sidebar-expanded:hidden 2xl:hidden text-center w-6" aria-hidden="true">
-                •••
-              </span>
-              <span className="lg:hidden lg:sidebar-expanded:block 2xl:block">Pages</span>
-            </h3>
             <ul className="mt-3">
                                             {/* Dashboard */}
-
-              {/* performance */}                              
-              <SidebarLinkGroup activecondition={pathname === "/performance"}>
+{/*Home */}                              
+              <SidebarLinkGroup activecondition={pathname === "/Home"}>
                   {(handleClick, open) => (
                     <NavLink
                       end
-                      to="/performance"
+                      to="/Home"
                       className={({ isActive }) =>
                         `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
                           isActive
@@ -135,7 +128,7 @@ function Sidebar({
                             <path d="M6.068 7.482A2.003 2.003 0 0 0 8 10a2 2 0 1 0-.518-3.932L3.707 2.293a1 1 0 0 0-1.414 1.414l3.775 3.775Z" />
                           </svg>
                           <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                            Performance
+                            Home
                           </span>
                         </div>
                       </div>
@@ -143,13 +136,53 @@ function Sidebar({
                   )}
               </SidebarLinkGroup>
 
-              {/* downtime */}
-              <SidebarLinkGroup activecondition={pathname.includes("downtime")}>
+
+              {/* Mould Maintenance History */}                              
+              <SidebarLinkGroup activecondition={pathname === "/MouldMaintenanceHistory"}>
+                  {(handleClick, open) => (
+                    <NavLink
+                      end
+                      to="/MouldMaintenanceHistory"
+                      className={({ isActive }) =>
+                        `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
+                          isActive
+                            ? "text-violet-500"
+                            : "hover:text-gray-900 dark:hover:text-white"
+                        }`
+                      }
+                      onClick={() => {
+                        handleClick();
+                        setSidebarExpanded(true);
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <svg
+                            className="shrink-0 fill-current"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M5.936.278A7.983 7.983 0 0 1 8 0a8 8 0 1 1-8 8c0-.722.104-1.413.278-2.064a1 1 0 1 1 1.932.516A5.99 5.99 0 0 0 2 8a6 6 0 1 0 6-6c-.53 0-1.045.076-1.548.21A1 1 0 1 1 5.936.278Z" />
+                            <path d="M6.068 7.482A2.003 2.003 0 0 0 8 10a2 2 0 1 0-.518-3.932L3.707 2.293a1 1 0 0 0-1.414 1.414l3.775 3.775Z" />
+                          </svg>
+                          <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                            Mould Maintenance History
+                          </span>
+                        </div>
+                      </div>
+                    </NavLink>
+                  )}
+              </SidebarLinkGroup>
+
+              {/* PM Status  */}
+              <SidebarLinkGroup activecondition={pathname.includes("PMStatus")}>
 
                 {(handleClick, open) => (
                     <NavLink
                       end
-                      to="/downtime"
+                      to="/PMStatus"
                       className={({ isActive }) =>
                         `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
                           isActive
@@ -168,7 +201,7 @@ function Sidebar({
                               <path d="M9 6.855A3.502 3.502 0 0 0 8 0a3.5 3.5 0 0 0-1 6.855v1.656L5.534 9.65a3.5 3.5 0 1 0 1.229 1.578L8 10.267l1.238.962a3.5 3.5 0 1 0 1.229-1.578L9 8.511V6.855ZM6.5 3.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm4.803 8.095c.005-.005.01-.01.013-.016l.012-.016a1.5 1.5 0 1 1-.025.032ZM3.5 11c.474 0 .897.22 1.171.563l.013.016.013.017A1.5 1.5 0 1 1 3.5 11Z" />
                             </svg>
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Downtime
+                              Preventive Maintenance Status
                             </span>
                           </div>
                         </div>
@@ -177,12 +210,12 @@ function Sidebar({
                
               </SidebarLinkGroup>
 
-              {/* cycletime */}
-              <SidebarLinkGroup activecondition={pathname.includes("cycletime")}>
+              {/* HC Status */}
+              <SidebarLinkGroup activecondition={pathname.includes("HCStatus")}>
                 {(handleClick, open) => (
                     <NavLink
                       end
-                      to="/cycletime"
+                      to="/HCStatus"
                       className={({ isActive }) =>
                         `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
                           isActive
@@ -201,7 +234,7 @@ function Sidebar({
                               <path d="M12 1a1 1 0 1 0-2 0v2a3 3 0 0 0 3 3h2a1 1 0 1 0 0-2h-2a1 1 0 0 1-1-1V1ZM1 10a1 1 0 1 0 0 2h2a1 1 0 0 1 1 1v2a1 1 0 1 0 2 0v-2a3 3 0 0 0-3-3H1ZM5 0a1 1 0 0 1 1 1v2a3 3 0 0 1-3 3H1a1 1 0 0 1 0-2h2a1 1 0 0 0 1-1V1a1 1 0 0 1 1-1ZM12 13a1 1 0 0 1 1-1h2a1 1 0 1 0 0-2h-2a3 3 0 0 0-3 3v2a1 1 0 1 0 2 0v-2Z" />
                             </svg>
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Cycle Time 
+                              Health Check Status 
                             </span>
                           </div>
                         </div>
@@ -210,12 +243,12 @@ function Sidebar({
                 
               </SidebarLinkGroup>
 
-              {/* Alarms */}
-              <SidebarLinkGroup activecondition={pathname.includes("alarms")}>
+              {/* spare Part   */}
+              <SidebarLinkGroup activecondition={pathname.includes("SparePart")}>
                 {(handleClick, open) => (
                     <NavLink
                       end
-                      to="/alarms"
+                      to="/SparePart"
                       className={({ isActive }) =>
                         `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
                           isActive
@@ -235,7 +268,7 @@ function Sidebar({
                               <path d="M10 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12Zm-4 6a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z" />
                             </svg>
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Alarms
+                              Spare Part 
                             </span>
                           </div>
                         </div>
@@ -244,12 +277,12 @@ function Sidebar({
                 
               </SidebarLinkGroup>
 
-              {/* Parameters */}
-              <SidebarLinkGroup activecondition={pathname.includes("parameters")}>
+              {/* Mould  Summary  */}
+              <SidebarLinkGroup activecondition={pathname.includes("MouldSummary")}>
                 {(handleClick, open) => (
                     <NavLink
                       end
-                      to="/parameters"
+                      to="/MouldSummary"
                       className={({ isActive }) =>
                         `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
                           isActive
@@ -268,7 +301,7 @@ function Sidebar({
                               <path d="M6.753 2.659a1 1 0 0 0-1.506-1.317L2.451 4.537l-.744-.744A1 1 0 1 0 .293 5.207l1.5 1.5a1 1 0 0 0 1.46-.048l3.5-4ZM6.753 10.659a1 1 0 1 0-1.506-1.317l-2.796 3.195-.744-.744a1 1 0 0 0-1.414 1.414l1.5 1.5a1 1 0 0 0 1.46-.049l3.5-4ZM8 4.5a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H9a1 1 0 0 1-1-1ZM9 11.5a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z" />
                             </svg>
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Parameters
+                              Mould Summary
                             </span>
                           </div>
                         </div>
@@ -276,100 +309,6 @@ function Sidebar({
                 )}
               </SidebarLinkGroup>
 
-              {/* Quality */}
-              <SidebarLinkGroup activecondition={pathname.includes("quality")}>
-                {(handleClick, open) => (
-                    <NavLink
-                      end
-                      to="/quality"
-                      className={({ isActive }) =>
-                        `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
-                          isActive
-                            ? "text-violet-500"
-                            : "hover:text-gray-900 dark:hover:text-white"
-                        }`
-                      }
-                      onClick={() => {
-                        handleClick();
-                        setSidebarExpanded(true);
-                      }}
-                    >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <svg className={`shrink-0 fill-current ${pathname.includes('tasks') ? 'text-violet-500' : 'text-gray-400 dark:text-gray-500'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                              <path d="M7.586 9H1a1 1 0 1 1 0-2h6.586L6.293 5.707a1 1 0 0 1 1.414-1.414l3 3a1 1 0 0 1 0 1.414l-3 3a1 1 0 1 1-1.414-1.414L7.586 9ZM3.075 4.572a1 1 0 1 1-1.64-1.144 8 8 0 1 1 0 9.144 1 1 0 0 1 1.64-1.144 6 6 0 1 0 0-6.856Z" />
-                            </svg>
-                            <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Quality
-                            </span>
-                          </div>
-                        </div>
-                    </NavLink>
-                )}
-              </SidebarLinkGroup>
-
-              {/* Mould */}
-              <SidebarLinkGroup activecondition={pathname === "/mould"}>
-                {(handleClick, open) => (
-                    <NavLink
-                      end
-                      to="/mould"
-                      className={({ isActive }) =>
-                        `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
-                          isActive
-                            ? "text-violet-500"
-                            : "hover:text-gray-900 dark:hover:text-white"
-                        }`
-                      }
-                      onClick={() => {
-                        handleClick();
-                        setSidebarExpanded(true);
-                      }}
-                    >
-                        <div className="flex items-center justify-between">
-                          <div className="grow flex items-center">
-                            <svg className={`shrink-0 fill-current ${pathname.includes('messages') ? 'text-violet-500' : 'text-gray-400 dark:text-gray-500'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                              <path d="M13.95.879a3 3 0 0 0-4.243 0L1.293 9.293a1 1 0 0 0-.274.51l-1 5a1 1 0 0 0 1.177 1.177l5-1a1 1 0 0 0 .511-.273l8.414-8.414a3 3 0 0 0 0-4.242L13.95.879ZM11.12 2.293a1 1 0 0 1 1.414 0l1.172 1.172a1 1 0 0 1 0 1.414l-8.2 8.2-3.232.646.646-3.232 8.2-8.2Z" />
-                              <path d="M10 14a1 1 0 1 0 0 2h5a1 1 0 1 0 0-2h-5Z" />
-                            </svg>
-                            <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Mould
-                            </span>
-                          </div>
-                        </div>
-                    </NavLink>
-                )}
-              </SidebarLinkGroup>
-
-              {/* Mould Maint */}
-              <SidebarLinkGroup activecondition={pathname === "/mould-maint"}>
-              {(handleClick, open) => (
-                    <NavLink
-                      end
-                      to="/mould-maint"
-                      className={({ isActive }) =>
-                        `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
-                          isActive
-                            ? "text-violet-500"
-                            : "hover:text-gray-900 dark:hover:text-white"
-                        }`
-                      }
-                      onClick={() => {
-                        handleClick();
-                        setSidebarExpanded(true);
-                      }}
-                    >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <svg className={`shrink-0 fill-current ${pathname.includes('inbox') ? 'text-violet-500' : 'text-gray-400 dark:text-gray-500'}`} xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-                              <path d="M11.92 6.851c.044-.027.09-.05.137-.07.481-.275.758-.68.908-1.256.126-.55.169-.81.357-2.058.075-.498.144-.91.217-1.264-4.122.75-7.087 2.984-9.12 6.284a18.087 18.087 0 0 0-1.985 4.585 17.07 17.07 0 0 0-.354 1.506c-.05.265-.076.448-.086.535a1 1 0 0 1-1.988-.226c.056-.49.209-1.312.502-2.357a20.063 20.063 0 0 1 2.208-5.09C5.31 3.226 9.306.494 14.913.004a1 1 0 0 1 .954 1.494c-.237.414-.375.993-.567 2.267-.197 1.306-.244 1.586-.392 2.235-.285 1.094-.789 1.853-1.552 2.363-.748 3.816-3.976 5.06-8.515 4.326a1 1 0 0 1 .318-1.974c2.954.477 4.918.025 5.808-1.556-.628.085-1.335.121-2.127.121a1 1 0 1 1 0-2c1.458 0 2.434-.116 3.08-.429Z" />
-                            </svg>
-                            <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">Mould Maint</span>
-                          </div>
-                        </div>
-                    </NavLink>
-                )}
-              </SidebarLinkGroup>
 
             </ul>
           </div>

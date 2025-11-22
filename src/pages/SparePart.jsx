@@ -1,12 +1,12 @@
 import React from 'react'
 import DashboardLayout from "../partials/DashboardLayout";
 
-const Alarms = () => {
+const SparePart = () => {
   return (
     <DashboardLayout>
-      <h1>Alarms Page</h1>
+      <h1> SparePart</h1>
     </DashboardLayout>
   )
 }
 
-export default Alarms
+export default SparePart

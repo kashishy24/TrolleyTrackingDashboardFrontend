@@ -213,125 +213,43 @@ function Home() {
         {/* Cards */}
         <div className="grid grid-cols-12 gap-6">
 
-          {/* Plant Production */}
+          {/* Plant vs actual pm  */}
           <div className="col-span-12 md:col-span-6 h-72 p-4 bg-white dark:bg-gray-800 shadow-xs rounded-xl">
-            <h2 className="font-semibold mb-2">Plant Production (Plan vs Actual)</h2>
+            <h2 className="font-semibold mb-2">PM (Plan vs Actual)</h2>
             {/* <PlantProductionChart chartData={chartData} /> */}
             <PlantProductionChart />
           </div>
         
-          {/* Plant Performance */}
+        
+          {/* PM Table  */}
           <div className="col-span-12 md:col-span-6 p-4 h-72  bg-white dark:bg-gray-800 shadow-xs rounded-xl">
-            <h2 className="font-semibold mb-2">Plant Performance (OEE)</h2>
-            <PlantPerformanceChart />
+            <h2 className="font-semibold mb-2">PM TABLE </h2>
+          </div>
+
+           {/* Plant vs actual HC  */}
+          <div className="col-span-12 md:col-span-6 h-72 p-4 bg-white dark:bg-gray-800 shadow-xs rounded-xl">
+            <h2 className="font-semibold mb-2">HC (Plan vs Actual)</h2>
+            {/* <PlantProductionChart chartData={chartData} /> */}
+            <PlantProductionChart />
           </div>
         
-          {/* Plant Downtime */}
+        
+          {/* HC Table  */}
           <div className="col-span-12 md:col-span-6 p-4 h-72  bg-white dark:bg-gray-800 shadow-xs rounded-xl">
-            <h2 className="font-semibold mb-2">Plant Downtime</h2>
-            <PlantDowntimeChart />
+            <h2 className="font-semibold mb-2">HC TABLE </h2>
           </div>
         
-          {/* Plant Quality */}
+          {/*  Top 5 Break Down Duration and Occurance  */}
           <div className="col-span-12 md:col-span-6 p-4 h-72  bg-white dark:bg-gray-800 shadow-xs rounded-xl">
-            <h2 className="font-semibold mb-2">Plant Quality</h2>
-            <PlantQualityChart />
+            <h2 className="font-semibold mb-2">Top 5 BreakDown Duration and OCCURENCE </h2>
           </div>
         </div>
 
-        {/* Machine Wise Production */}
-        <div className="mt-10 ">
-          <h2 className="bg-[#3c51d2]  p-3 rounded-lg text-white text-center shadow-sm font-bold text-lg mb-4">Machine Wise Production</h2>
-          <div className="p-14">
-          <Slider {...settings}>
-              {machinesWiseProduction.map((machine) => (
-                <div key={machine.id} className="px-2 w-full">
-                  <MachineCard
-                    title={machine.name}
-                    data={{
-                      ID: machine.id,
-                      Expected: machine.expected,
-                      Actual: machine.actual,
-                      Productivity: machine.productivity,
-                    }}
-                  />
-                </div>
-              ))}
-          </Slider>
+        {/*  Spare part table   */}
+          <div className="col-span-12 md:col-span-6 p-4 h-72  bg-white dark:bg-gray-800 shadow-xs rounded-xl">
+            <h2 className="font-semibold mb-2"> spare part table </h2>
           </div>
         </div>
-
-        {/* Machine Performance */}
-        {/* <div className="mt-10">
-          <h2 className="bg-[#3c51d2]  p-3 rounded-lg text-white text-center shadow-sm font-bold text-lg mb-4">Machine Performance</h2>
-          <div className="p-14">
-            <Slider {...settings}>
-              {machinePerformance.map((machine) => (
-                <div key={machine.id} className="px-2">
-                  <MachineCard
-                    title={machine.name}
-                    data={{
-                      ID: machine.id,
-                      ExpectedQty: machine.expectedQty,
-                      ActualQty: machine.actualQty,
-                      PlannedCt: machine.plannedCT,
-                      ActualCt: machine.actualCT,
-                      Performance: machine.performance,
-                    }}
-                  />
-                </div>
-              ))}
-            </Slider>
-          </div>
-        </div> */}
-
-        {/* Machine Wise Availability */}
-        {/* <div className="mt-10">
-          <h2 className="bg-[#3c51d2]  p-3 rounded-lg text-white text-center shadow-sm font-bold text-lg mb-4">Machine Wise Availability</h2>
-          <div className="p-14">
-            <Slider {...settings}>
-              {machineAvailability.map((machine) => (
-                <div key={machine.id} className="px-2">
-                  <MachineCard
-                    title={machine.name}
-                    data={{
-                      ID: machine.id,
-                      TotalShiftTime: machine.totalShiftTime,
-                      PlannedProductionTime: machine.plannedProductionTime,
-                      RunTime: machine.runTime,
-                      Downtime: machine.downtime,
-                      Availability: machine.availability,
-                    }}
-                  />
-                </div>
-              ))}
-            </Slider>
-          </div>
-        </div> */}
-
-        {/* Machine Wise Quality */}
-        {/* <div className="mt-10">
-          <h2 className="bg-[#3c51d2]  p-3 rounded-lg text-white text-center shadow-sm font-bold text-lg mb-4">Machine Wise Quality</h2>
-          <div className="p-14">
-            <Slider {...settings}>
-              {machineQuality.map((machine) => (
-                <div key={machine.id} className="px-2">
-                  <MachineCard
-                    title={machine.name}
-                    data={{
-                      ID: machine.id,
-                      TotalProducedQty: machine.totalProducedQty,
-                      RejectedQty: machine.rejectedQty,
-                      GoodQty: machine.goodQty,
-                      Quality: machine.quality,
-                    }}
-                  />
-                </div>
-              ))}
-            </Slider>
-          </div>
-        </div> */}
-      </div>
     </DashboardLayout>
   );
 }

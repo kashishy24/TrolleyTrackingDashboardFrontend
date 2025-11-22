@@ -1,12 +1,12 @@
 import React from 'react'
 import DashboardLayout from "../partials/DashboardLayout";
 
-const Quality = () => {
+const PMStatus = () => {
   return (
     <DashboardLayout>
-      <h1>Quality Page</h1>
+      <h1>PMStatus </h1>
     </DashboardLayout>
   )
 }
 
-export default Quality
+export default PMStatus

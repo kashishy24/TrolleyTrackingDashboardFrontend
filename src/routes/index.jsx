@@ -4,15 +4,12 @@ import PrivateRoute from "../pages/PrivateRoute.jsx";
 // pages
 import Login from "../pages/Login.jsx";
 import Home from "../pages/Home.jsx";
-import Alarms from "../pages/Alarms.jsx";
-import Cycletime from "../pages/Cycletime.jsx";
-import Downtime from "../pages/Downtime.jsx"
-import Performance from "../pages/performance/Performance.jsx";
-import Parameters from "../pages/Parameters.jsx";
-import Quality from "../pages/Quality.jsx";
-import Mould from "../pages/Mould.jsx";
-import MouldMaint from "../pages/MouldMaint.jsx";
 import Error from "../pages/Error.jsx";
+import MouldMaintenanceHistory from "../pages/MouldMaintenanceHistory/MouldMaintanceHistory.jsx";
+import PMStatus from "../pages/PMStatus.jsx";
+import HCStatus from "../pages/HCStatus.jsx";
+import SparePart from "../pages/SparePart.jsx";
+import MouldSummary from "../pages/MouldSummary.jsx";
 
 export default function AppRoutes() {
   return (
@@ -31,73 +28,46 @@ export default function AppRoutes() {
       />
 
       <Route
-        path="/performance"
+        path="/MouldMaintenanceHistory"
         element={
           <PrivateRoute>
-            <Performance />
+            <MouldMaintenanceHistory />
           </PrivateRoute>
         }
       />
 
       <Route
-        path="/alarms"
+        path="/PMStatus"
         element={
           <PrivateRoute>
-            <Alarms />
+            <PMStatus />
           </PrivateRoute>
         }
       />
 
       <Route
-        path="/cycletime"
+        path="/HCStatus"
         element={
           <PrivateRoute>
-            <Cycletime />
+            <HCStatus />
           </PrivateRoute>
         }
       />
 
       <Route
-        path="/downtime"
+        path="/SparePart"
         element={
           <PrivateRoute>
-            <Downtime />
+            <SparePart />
           </PrivateRoute>
         }
       />
 
       <Route
-        path="/parameters"
+        path="/MouldSummary"
         element={
           <PrivateRoute>
-            <Parameters />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
-        path="/quality"
-        element={
-          <PrivateRoute>
-            <Quality />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
-        path="/mould"
-        element={
-          <PrivateRoute>
-            <Mould />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
-        path="/mould-maint"
-        element={
-          <PrivateRoute>
-            <MouldMaint />
+            <MouldSummary />
           </PrivateRoute>
         }
       />

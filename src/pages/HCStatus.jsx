@@ -1,12 +1,12 @@
 import React from 'react'
 import DashboardLayout from "../partials/DashboardLayout";
 
-const Mould = () => {
+const HCStatus = () => {
   return (
     <DashboardLayout>
-      <h1>Mould Page</h1>
+      <h1> HCStatus</h1>
     </DashboardLayout>
   )
 }
 
-export default Mould
+export default HCStatus

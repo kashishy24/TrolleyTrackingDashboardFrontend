@@ -25,6 +25,25 @@ import axios from "axios";
 const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
 });
+
+/* ------------------ PROGRESS BAR (✅ ADDED HERE) ------------------ */
+const ProgressBar = ({ value }) => {
+  const max = 10; // adjust if needed
+  const width = Math.min((value / max) * 100, 100);
+
+  return (
+    <div className="w-full bg-gray-200 rounded-full h-4">
+      <div
+        className="bg-blue-600 h-4 rounded-full flex items-center justify-center text-xs text-white font-semibold transition-all duration-500"
+        style={{ width: `${width}%` }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+};
+
+
 /* ------------------ STAT CARD ------------------ */
 const StatCard = ({ title, items, icon: Icon }) => (
   <motion.div
@@ -123,6 +142,7 @@ const Home = () => {
   const [abnormalSummary, setAbnormalSummary] = useState({ duplicate: 0, wrong: 0 });
   const [duplicateLocation, setDuplicateLocation] = useState([]);
   const [wrongLocation, setWrongLocation] = useState([]);
+const [todayAbnormalMovements, setTodayAbnormalMovements] = useState([]);
 
   /* ------------------ API CALLS ------------------ */
  useEffect(() => {
@@ -158,6 +178,13 @@ const Home = () => {
         duplicate: abnormalRes.data.data.DuplicateMovement,
         wrong: abnormalRes.data.data.WrongMovement,
       });
+
+      /* ---------- TODAY WRONG / DUPLICATE MOVEMENT TABLE ---------- */
+const todayAbnormalRes = await api.get(
+  "/Home/wrong-duplicate-movement/today"
+);
+
+setTodayAbnormalMovements(todayAbnormalRes.data.data || []);
 
       /* ---------- DUP / WRONG LOCATION WISE ---------- */
       const locWiseRes = await api.get("/Home/TrolleyDupWrongMovementLocationWise");
@@ -218,6 +245,7 @@ const Home = () => {
     { name: "Repair Today", value: liveStatus.repairedToday },
     { name: "Scrap Today", value: liveStatus.locationStatus.Scrap },
   ];
+
 
   return (
     <DashboardLayout>
@@ -393,25 +421,39 @@ const Home = () => {
         </div>
 
         {/* TABLE */}
-        <div className="mt-6 bg-white rounded-xl shadow-md overflow-hidden">
-          <div className="grid grid-cols-3 bg-blue-100 text-black font-bold p-3">
-            <span>Source</span>
-            <span>Destination</span>
-            <span>Movement Count</span>
-          </div>
+    {/* TABLE */}
+<div className="mt-6 bg-white rounded-xl shadow-md overflow-hidden">
+  <div className="grid grid-cols-3 bg-blue-100 text-black font-bold p-3">
+    <span>Source</span>
+    <span>Destination</span>
+    <span>Movement Count</span>
+  </div>
 
-          {/* {abnormalMovementTable.map((row, index) => (
+  {todayAbnormalMovements.length === 0 ? (
+    <div className="p-4 text-center text-gray-500">
+      No abnormal movement today
+    </div>
+  ) : (
+    todayAbnormalMovements.map((row, index) => (
       <motion.div
         key={index}
         whileHover={{ backgroundColor: "#f1f5f9" }}
         className="grid grid-cols-3 items-center p-3 border-b text-sm"
       >
-        <span className="text-black font-semibold">{row.source}</span>
-        <span className="text-black font-semibold">{row.destination}</span>
-        <ProgressBar value={row.value} />
+        <span className="text-black font-semibold">
+          {row.Source}
+        </span>
+
+        <span className="text-black font-semibold">
+          {row.Destination}
+        </span>
+
+        <ProgressBar value={row.MovementCount} />
       </motion.div>
-    ))} */}
-        </div>
+    ))
+  )}
+</div>
+
       </div>
       {/* Location Wise Charts */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8 pl-10 pr-4 mb-10 ">

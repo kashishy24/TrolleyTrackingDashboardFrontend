@@ -63,7 +63,7 @@ const Login = ({ switchView }) => {
             
             {/* Title */}
             <h2 className="text-2xl font-bold text-gray-800 mb-10 text-center">
-              Welcome to Dashboard
+              Welcome to Trolley Tracking Dashboard
             </h2>
         
             {/* Form */}

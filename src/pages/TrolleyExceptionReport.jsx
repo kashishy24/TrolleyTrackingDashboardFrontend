@@ -1,12 +1,12 @@
 import React from 'react'
 import DashboardLayout from "../partials/DashboardLayout";
 
-const HCStatus = () => {
+const TrolleyExceptionReport = () => {
   return (
     <DashboardLayout>
-      <h1> HCStatus</h1>
+      <h1>Trolley Exception Report</h1>
     </DashboardLayout>
   )
 }
 
-export default HCStatus
+export default TrolleyExceptionReport

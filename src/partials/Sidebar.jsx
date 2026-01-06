@@ -13,7 +13,8 @@ import {
 
 
 import SidebarLinkGroup from "./SidebarLinkGroup";
-import logo from "../assets/logos/Dalisoft Logo.jpg"
+import logo from "../assets/logos/lumax.jpg"
+import logo1 from "../assets/logos/Dalisoft Logo.jpg"
 
 function Sidebar({
   sidebarOpen,
@@ -139,12 +140,12 @@ function Sidebar({
               </SidebarLinkGroup>
 
 
-              {/* Mould Maintenance History */}                              
-              <SidebarLinkGroup activecondition={pathname === "/MouldMaintenanceHistory"}>
+              {/* Trolley History*/}                              
+              <SidebarLinkGroup activecondition={pathname === "/TrolleyHistory"}>
                   {(handleClick, open) => (
                     <NavLink
                       end
-                      to="/MouldMaintenanceHistory"
+                      to="/TrolleyHistory"
                       className={({ isActive }) =>
                         `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
                           isActive
@@ -166,7 +167,7 @@ function Sidebar({
   2xl:opacity-100 duration-200
   whitespace-normal break-words
 ">
-  Mould Maintenance History
+  Trolley History
 </span>
                         </div>
                       </div>
@@ -174,13 +175,13 @@ function Sidebar({
                   )}
               </SidebarLinkGroup>
 
-              {/* PM Status  */}
-              <SidebarLinkGroup activecondition={pathname.includes("PMStatus")}>
+              {/*Trolley Breakdown  */}
+              <SidebarLinkGroup activecondition={pathname.includes("TrolleyBreakdown")}>
 
                 {(handleClick, open) => (
                     <NavLink
                       end
-                      to="/PMStatus"
+                      to="/TrolleyBreakdown"
                       className={({ isActive }) =>
                         `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
                           isActive
@@ -204,7 +205,7 @@ function Sidebar({
     whitespace-normal break-words leading-tight block max-w-[150px]
   "
 >
-  Preventive Maintenance Status
+ Trolley Breakdown
 </span>
 
                           </div>
@@ -214,12 +215,12 @@ function Sidebar({
                
               </SidebarLinkGroup>
 
-              {/* HC Status */}
-              <SidebarLinkGroup activecondition={pathname.includes("HCStatus")}>
+              {/* Preventive Maintenance Status */}
+              <SidebarLinkGroup activecondition={pathname.includes("PMStatus")}>
                 {(handleClick, open) => (
                     <NavLink
                       end
-                      to="/HCStatus"
+                      to="/PMStatus"
                       className={({ isActive }) =>
                         `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
                           isActive
@@ -236,7 +237,7 @@ function Sidebar({
                           <div className="flex items-center">
                            <MdCheckCircle size={20} />
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Health Check Status 
+                              Preventive Maintenance Status
                             </span>
                           </div>
                         </div>
@@ -245,12 +246,12 @@ function Sidebar({
                 
               </SidebarLinkGroup>
 
-              {/* spare Part   */}
-              <SidebarLinkGroup activecondition={pathname.includes("SparePart")}>
+              {/* Preventive Maintenance History   */}
+              <SidebarLinkGroup activecondition={pathname.includes("PMHistory")}>
                 {(handleClick, open) => (
                     <NavLink
                       end
-                      to="/SparePart"
+                      to="/PMHistory"
                       className={({ isActive }) =>
                         `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
                           isActive
@@ -267,7 +268,7 @@ function Sidebar({
                           <div className="flex items-center">
                            <MdTune size={20} />
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Spare Part 
+                              Preventive Maintenance History
                             </span>
                           </div>
                         </div>
@@ -276,12 +277,12 @@ function Sidebar({
                 
               </SidebarLinkGroup>
 
-              {/* Mould  Summary  */}
-              <SidebarLinkGroup activecondition={pathname.includes("MouldSummary")}>
+              {/* Trolley Exception Report */}
+              <SidebarLinkGroup activecondition={pathname.includes("TrolleyExceptionReport")}>
                 {(handleClick, open) => (
                     <NavLink
                       end
-                      to="/MouldSummary"
+                      to="/TrolleyExceptionReport"
                       className={({ isActive }) =>
                         `block text-gray-800 dark:text-gray-100 truncate transition duration-150 ${
                           isActive
@@ -298,7 +299,7 @@ function Sidebar({
                           <div className="flex items-center">
                            <MdSpeed size={20} />
                             <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Mould Summary
+                              Trolley Exception Report
                             </span>
                           </div>
                         </div>

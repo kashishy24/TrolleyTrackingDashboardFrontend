@@ -1,12 +1,12 @@
 import React from 'react'
 import DashboardLayout from "../partials/DashboardLayout";
 
-const SparePart = () => {
+const PMHistory = () => {
   return (
     <DashboardLayout>
-      <h1> SparePart</h1>
+      <h1>Preventive Maintenance History</h1>
     </DashboardLayout>
   )
 }
 
-export default SparePart
+export default PMHistory

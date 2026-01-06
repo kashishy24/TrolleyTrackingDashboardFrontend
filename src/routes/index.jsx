@@ -5,14 +5,11 @@ import PrivateRoute from "../pages/PrivateRoute.jsx";
 import Login from "../pages/Login.jsx";
 import Home from "../pages/Home.jsx";
 import Error from "../pages/Error.jsx";
-import MouldMaintenanceHistory from "../pages/MouldMaintenanceHistory/MouldMaintanceHistory.jsx";
+import TrolleyHistory from "../pages/TrolleyHistory.jsx";
+import TrolleyBreakdown from "../pages/TrolleyBreakdown.jsx";
 import PMStatus from "../pages/PMStatus.jsx";
-import HCStatus from "../pages/HCStatus.jsx";
-import SparePart from "../pages/SparePart.jsx";
-import MouldSummary from "../pages/MouldSummary.jsx";
-import HCHistory from "../pages/MouldMaintenanceHistory/HCHistory.jsx";
-import MouldBreakdownHistory from "../pages/MouldMaintenanceHistory/BreakDownHistory.jsx";
-import MouldSparePartHistory from "../pages/MouldMaintenanceHistory/SparePartHistory.jsx";
+import PMHistory from "../pages/PMHistory.jsx";
+import TrolleyExceptionReport from "../pages/TrolleyExceptionReport.jsx";
 
 export default function AppRoutes() {
   return (
@@ -29,10 +26,19 @@ export default function AppRoutes() {
       />
 
       <Route
-        path="/MouldMaintenanceHistory"
+        path="/TrolleyHistory"
         element={
           <PrivateRoute>
-            <MouldMaintenanceHistory />
+            <TrolleyHistory />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/TrolleyBreakdown"
+        element={
+          <PrivateRoute>
+            <TrolleyBreakdown />
           </PrivateRoute>
         }
       />
@@ -47,55 +53,19 @@ export default function AppRoutes() {
       />
 
       <Route
-        path="/HCStatus"
+        path="/PMHistory"
         element={
           <PrivateRoute>
-            <HCStatus />
+            <PMHistory />
           </PrivateRoute>
         }
       />
 
       <Route
-        path="/SparePart"
+        path="/TrolleyExceptionReport"
         element={
           <PrivateRoute>
-            <SparePart />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
-        path="/MouldSummary"
-        element={
-          <PrivateRoute>
-            <MouldSummary />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
-        path="/HCHistory"
-        element={
-          <PrivateRoute>
-            <HCHistory />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
-        path="/MouldBreakdownHistory"
-        element={
-          <PrivateRoute>
-            <MouldBreakdownHistory />
-          </PrivateRoute>
-        }
-      />
-
-      <Route
-        path="/MouldSparePartHistory"
-        element={
-          <PrivateRoute>
-            <MouldSparePartHistory />
+            <TrolleyExceptionReport />
           </PrivateRoute>
         }
       />

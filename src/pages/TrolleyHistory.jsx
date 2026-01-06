@@ -1,12 +1,12 @@
 import React from 'react'
 import DashboardLayout from "../partials/DashboardLayout";
 
-const PMStatus = () => {
+const TrolleyHistory = () => {
   return (
     <DashboardLayout>
-      <h1>Preventive Maintenance Status</h1>
+      <h1>Trolley History</h1>
     </DashboardLayout>
   )
 }
 
-export default PMStatus
+export default TrolleyHistory

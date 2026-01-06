@@ -1,5 +1,6 @@
 {
-  "name": "mosaic-react",
+
+   "name": "trolley-tracking-frontend",
   "version": "0.1.0",
   "type": "module",
   "scripts": {

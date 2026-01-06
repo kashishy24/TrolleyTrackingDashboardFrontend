@@ -15,6 +15,8 @@ import {
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
+  LineChart,
+  Line,
 } from "recharts";
 
 import { motion } from "framer-motion";
@@ -30,7 +32,7 @@ const StatCard = ({ title, items, icon: Icon }) => (
   >
     <div className="flex items-center gap-2 mb-3">
       <Icon className="text-blue-600 text-xl" />
-      <h3 className="text-sm font-semibold text-black-700 dark:text-gray-200">
+      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">
         {title}
       </h3>
     </div>
@@ -70,14 +72,13 @@ const ChartCard = ({ title, data, barColor }) => (
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-          <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+          <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
           <Bar
             dataKey="value"
             fill={barColor}
             radius={[6, 6, 0, 0]}
-            isAnimationActive={true}
             animationDuration={1200}
           />
         </BarChart>
@@ -86,7 +87,7 @@ const ChartCard = ({ title, data, barColor }) => (
   </motion.div>
 );
 
-/* ------------------ DUMMY DATA ------------------ */
+/* ------------------ DATA ------------------ */
 const trolleyBreakdownData = [
   { name: "Empty", value: 1000 },
   { name: "FG", value: 700 },
@@ -111,12 +112,28 @@ const pmStatusData = [
   { name: "Completed", value: 900 },
 ];
 
-/* ------------------ HOME SCREEN ------------------ */
+/* 🔥 NEW: Hourly Movement Trend */
+const trolleyMovementHourly = [
+  { hour: "08:00", customerToStore: 10, storeToProduction: 15, productionToFGStore: 20, FGStoreToInTransit: 25 },
+  { hour: "09:00", customerToStore: 18, storeToProduction: 22, productionToFGStore: 25, FGStoreToInTransit: 30 },
+  { hour: "10:00", customerToStore: 14, storeToProduction: 26, productionToFGStore: 30, FGStoreToInTransit: 35 },
+  { hour: "11:00", customerToStore: 20, storeToProduction: 30, productionToFGStore: 35, FGStoreToInTransit: 40 },
+  { hour: "12:00", customerToStore: 16, storeToProduction: 28, productionToFGStore: 25, FGStoreToInTransit: 31 },
+  { hour: "13:00", customerToStore: 22, storeToProduction: 35, productionToFGStore: 40, FGStoreToInTransit: 45 },
+];
+const trolleyAbnormalMovement = [
+  { label: "Duplicate Movement", value: 85 },
+  { label: "Scanner Source Destination", value: 78 },
+  { label: "Scanner Source Destination", value: 55 },
+];
+
+
+/* ------------------ HOME ------------------ */
 const Home = () => {
   return (
     <DashboardLayout>
-      {/* ------------------ TOP STATS ------------------ */}
-      <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-6 mr-4 pl-10">
+      {/* TOP STATS */}
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 mr-4 pl-10">
         <StatCard
           title="By Location"
           icon={MdLocalShipping}
@@ -168,10 +185,9 @@ const Home = () => {
         />
       </div>
 
-      {/* ------------------ CHARTS ------------------ */}
+      {/* CHARTS */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8 pl-10 pr-4">
-
-         <ChartCard
+        <ChartCard
           title="Trolley Location"
           data={trolleyBreakdownData}
           barColor="#ef4444"
@@ -196,30 +212,172 @@ const Home = () => {
         />
       </div>
 
-      {/* ------------------ MOVEMENT ------------------ */}
+      {/* ------------------ MOVEMENT + HOURLY TREND ------------------ */}
       <div className="mt-8 pl-10 pr-4 mb-8">
-        <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-          Trolley Movement
+        <h2 className="text-lg font-semibold rounded-full bg-white text-gray-800 mb-4 p-4 justify-center text-center">
+          🚚 Trolley Movement
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-blue-600 text-white rounded-xl p-6 shadow-md"
-          >
-            <p className="text-sm opacity-80">Customer to Empty Store</p>
-            <h3 className="text-3xl font-bold mt-2">—</h3>
-          </motion.div>
+        {/* Cards */}
+        <div className="flex flex-wrap gap-8 justify-center">
+  {/* Customer → Empty Store */}
+  <motion.div
+    whileHover={{ scale: 1.05 }}
+    className="flex bg-white rounded-xl shadow-md p-4"
+  >
+    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 text-xl">
+      🚚
+    </div>
+    <div>
+      <p className="text-xs text-gray-500">Customer → Empty Store</p>
+      <p className="text-2xl font-semibold text-gray-800">2900</p>
+    </div>
+  </motion.div>
 
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-green-600 text-white rounded-xl p-6 shadow-md"
-          >
-            <p className="text-sm opacity-80">Empty Store to Production</p>
-            <h3 className="text-3xl font-bold mt-2">2900</h3>
-          </motion.div>
-        </div>
+  {/* Empty Store → Production */}
+  <motion.div
+    whileHover={{ scale: 1.05 }}
+    className="flex items-center gap-3 bg-white rounded-xl shadow-md p-4"
+  >
+    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-100 text-green-600 text-xl">
+      🏭
+    </div>
+    <div>
+      <p className="text-xs text-gray-500">Empty Store → Production</p>
+      <p className="text-2xl font-semibold text-gray-800">2900</p>
+    </div>
+  </motion.div>
+
+  {/* Production → FG Store */}
+  <motion.div
+    whileHover={{ scale: 1.05 }}
+    className="flex items-center gap-3 bg-white rounded-xl shadow-md p-4"
+  >
+    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-100 text-green-600 text-xl">
+      🏭
+    </div>
+    <div>
+      <p className="text-xs text-gray-500">Production → FG Store</p>
+      <p className="text-2xl font-semibold text-gray-800">2900</p>
+    </div>
+  </motion.div>
+
+  {/* FG Store  → IN Transt */}
+  <motion.div
+    whileHover={{ scale: 1.05 }}
+    className="flex items-center gap-3 bg-white rounded-xl shadow-md p-4"
+  >
+    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-100 text-green-600 text-xl">
+      🏭
+    </div>
+    <div>
+      <p className="text-xs text-gray-500">FG Store → IN Transt</p>
+      <p className="text-2xl font-semibold text-gray-800">2900</p>
+    </div>
+  </motion.div>
+</div>
+
+
+        {/* Hourly Trend */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="bg-white rounded-xl shadow-lg p-6 mt-6"
+        >
+          <h3 className="text-md font-semibold text-gray-700 mb-4">
+            ⏱️ Hourly Movement Trend
+          </h3>
+
+          <ResponsiveContainer width="100%" height={280}>
+           <LineChart
+    data={trolleyMovementHourly}
+    margin={{ top: 5, right: 20, left: 10, bottom: 5 }} // tighten spacing
+  >
+              <CartesianGrid strokeDasharray="3 3" />
+             <XAxis
+  dataKey="hour"
+  interval={0} // ensures all labels show and are evenly spaced
+  padding={{ left: 10, right: 10 }} // reduce extra padding
+/>
+<YAxis
+  domain={['dataMin - 5', 'dataMax + 5']} // optional, tighten Y-axis
+/>
+Also, for 
+              <Tooltip />
+              <Line
+                type="monotone"
+                dataKey="customerToStore"
+                stroke="#2563eb"
+                strokeWidth={3}
+                name="Customer → Store"
+              />
+              <Line
+                type="monotone"
+                dataKey="storeToProduction"
+                stroke="#16a34a"
+                strokeWidth={3}
+                name="Store → Production"
+              />
+              <Line
+                type="monotone"
+                dataKey="productionToFGStore"
+                stroke="#a3165fff"
+                strokeWidth={3}
+                name="Production → FG Store"
+              />
+              <Line
+                type="monotone"
+                dataKey="FGStoreToInTransit"
+                stroke="#cd941aff"
+                strokeWidth={3}
+                name="FG Store → In Transit"
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </motion.div>
       </div>
+
+{/* ------------------ TROLLEY ABNORMAL MOVEMENT ------------------ */}
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+  viewport={{ once: true }}
+  className="bg-white rounded-xl shadow-md p-5 mt-8 mb-4 pl-6 pr-6 ml-6 mr-6" 
+>
+  {/* Header */}
+  <div className="w-full bg-blue-600 text-white text-center font-semibold py-2 rounded-md mb-4">
+    Trolley Abnormal Movement
+  </div>
+
+  {/* List */}
+  <div className="divide-y divide-gray-200">
+    {trolleyAbnormalMovement.map((item, index) => (
+      <motion.div
+        key={index}
+        whileHover={{ scale: 1.02 }}
+        className="flex items-center justify-between py-3 px-2 cursor-pointer pl-4 pr-4"
+      >
+        {/* Label */}
+        <span className="text-sm text-gray-700">
+          {item.label}
+        </span>
+
+        {/* Right Badge */}
+        <span className="min-w-[500px] text-center px-3 py-1 rounded-full 
+                         bg-blue-100 text-blue-700 text-sm font-semibold">
+          {item.value}
+        </span>
+      </motion.div>
+    ))}
+  </div>
+</motion.div>
+
+
+
+
     </DashboardLayout>
   );
 };

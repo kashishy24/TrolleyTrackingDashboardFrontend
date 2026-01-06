@@ -77,7 +77,7 @@ function Sidebar({
         className={`flex lg:flex! flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-[100dvh] overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 lg:w-20 lg:sidebar-expanded:!w-64 2xl:w-64! shrink-0 bg-white dark:bg-gray-800 p-4 transition-all duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-64"} ${variant === 'v2' ? 'border-r border-gray-200 dark:border-gray-700/60' : 'rounded-r-2xl shadow-xs'}`}
       >
         {/* Sidebar header */}
-        <div className="flex justify-between mb-10 pr-3 sm:px-2">
+        <div className="flex items-center justify-between mb-6 px-2">
           {/* Close button */}
           <button
             ref={trigger}
@@ -92,15 +92,22 @@ function Sidebar({
             </svg>
           </button>
           {/* Logo */}
-          <NavLink end to="/home" className="block">
-            {sidebarExpanded && (
-              <img 
-                src={logo}  
-                alt="Logo"                    
-                className="w-28 h-8"       
-              />
-            )}
-          </NavLink>
+         <NavLink
+  end
+  to="/home"
+  className="flex items-center justify-center w-full"
+>
+  <img
+    src={logo}
+    alt="Logo"
+    className={`
+      transition-all duration-300
+      ${sidebarExpanded ? "w-32 h-auto" : "w-10 h-10"}
+      object-contain
+    `}
+  />
+</NavLink>
+
         </div>
 
         {/* Links */}
@@ -162,10 +169,11 @@ function Sidebar({
                         <div className="flex items-center">
                           <MdBuild size={20} />
                           <span className="
-  text-sm font-medium ml-4 
-  lg:opacity-0 lg:sidebar-expanded:opacity-100 
+text-sm font-medium ml-4
+  lg:opacity-0 lg:sidebar-expanded:opacity-100
   2xl:opacity-100 duration-200
-  whitespace-normal break-words
+  whitespace-normal break-words leading-tight
+  max-w-[160px]
 ">
   Trolley History
 </span>
@@ -199,10 +207,11 @@ function Sidebar({
                            <MdEngineering size={20} />
                             <span
   className="
-    text-sm font-medium ml-4 
-    lg:opacity-0 lg:sidebar-expanded:opacity-100 
-    2xl:opacity-100 duration-200
-    whitespace-normal break-words leading-tight block max-w-[150px]
+    text-sm font-medium ml-4
+  lg:opacity-0 lg:sidebar-expanded:opacity-100
+  2xl:opacity-100 duration-200
+  whitespace-normal break-words leading-tight
+  max-w-[160px]
   "
 >
  Trolley Breakdown
@@ -236,7 +245,11 @@ function Sidebar({
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
                            <MdCheckCircle size={20} />
-                            <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                            <span className="text-sm font-medium ml-4
+  lg:opacity-0 lg:sidebar-expanded:opacity-100
+  2xl:opacity-100 duration-200
+  whitespace-normal break-words leading-tight
+  max-w-[160px]">
                               Preventive Maintenance Status
                             </span>
                           </div>
@@ -267,9 +280,15 @@ function Sidebar({
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
                            <MdTune size={20} />
-                            <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                              Preventive Maintenance History
-                            </span>
+                            <span className="
+  text-sm font-medium ml-4
+  lg:opacity-0 lg:sidebar-expanded:opacity-100
+  2xl:opacity-100 duration-200
+  whitespace-normal break-words leading-tight
+  max-w-[160px]
+">
+  Preventive Maintenance History
+</span>
                           </div>
                         </div>
                     </NavLink>
@@ -298,7 +317,11 @@ function Sidebar({
                         <div className="flex items-center justify-between">
                           <div className="flex items-center">
                            <MdSpeed size={20} />
-                            <span className="text-sm font-medium ml-4 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                            <span className=" text-sm font-medium ml-4
+  lg:opacity-0 lg:sidebar-expanded:opacity-100
+  2xl:opacity-100 duration-200
+  whitespace-normal break-words leading-tight
+  max-w-[160px]">
                               Trolley Exception Report
                             </span>
                           </div>

@@ -1,90 +1,105 @@
 import React, { useState } from "react";
+import axios from "axios";
 import DashboardLayout from "../partials/DashboardLayout";
-
 /* --------- DUMMY DATA --------- */
-const tableData = [
-  {
-    trolleyId: "TR-101",
-    pmStatus: "Completed",
-    locationStatus: "OK",
-    movementStatus: "Duplicate",
-    trolleyStatus: "OK",
-    materialStatus: "Loaded",
-    timestamp: "2025-01-08 10:30",
-    userId: "USR-01",
+const STATUS_COLORS = {
+  PM_STATUS: {
+    Normal: "bg-green-100 text-green-700",
+    Alert: "bg-yellow-100 text-yellow-700",
+    Warning: "bg-orange-100 text-orange-700",
+    Alarm: "bg-red-100 text-red-700",
   },
-  {
-    trolleyId: "TR-102",
-    pmStatus: "Pending",
-    locationStatus: "Wrong",
-    movementStatus: "Error",
-    trolleyStatus: "Maintenance",
-    materialStatus: "Missing",
-    timestamp: "2025-01-09 11:15",
-    userId: "USR-02",
-  },
-  {
-    trolleyId: "TR-103",
-    pmStatus: "Pending",
-    locationStatus: "Wrong",
-    movementStatus: "Error",
-    trolleyStatus: "Maintenance",
-    materialStatus: "Missing",
-    timestamp: "2025-01-09 11:15",
-    userId: "USR-02",
-  },
-  {
-    trolleyId: "TR-104",
-    pmStatus: "Pending",
-    locationStatus: "Wrong",
-    movementStatus: "Error",
-    trolleyStatus: "Maintenance",
-    materialStatus: "Missing",
-    timestamp: "2025-01-09 11:15",
-    userId: "USR-02",
-  },
-  {
-    trolleyId: "TR-105",
-    pmStatus: "Pending",
-    locationStatus: "Wrong",
-    movementStatus: "Error",
-    trolleyStatus: "Maintenance",
-    materialStatus: "Missing",
-    timestamp: "2025-01-09 11:15",
-    userId: "USR-02",
-  },
-];
 
-/* --------- STATUS BADGE --------- */
-const StatusBadge = ({ value }) => {
-  const colorMap = {
-    Completed: "bg-green-100 text-green-700",
-    Pending: "bg-yellow-100 text-yellow-700",
-    Duplicate: "bg-orange-100 text-orange-700",
-    Error: "bg-red-100 text-red-700",
+  MOVEMENT_STATUS: {
     OK: "bg-green-100 text-green-700",
-    Wrong: "bg-red-100 text-red-700",
-    OK: "bg-blue-100 text-blue-700",
-    Maintenance: "bg-gray-200 text-gray-700",
-    Loaded: "bg-indigo-100 text-indigo-700",
-    Missing: "bg-red-100 text-red-700",
-  };
+    NOK: "bg-red-100 text-red-700",
+    Duplicate: "bg-orange-100 text-orange-700",
+  },
+
+  TROLLEY_STATUS: {
+    OK: "bg-green-100 text-green-700",
+    Maintenance: "bg-yellow-100 text-yellow-700",
+    PM: "bg-blue-100 text-blue-700",
+    Scrap: "bg-red-100 text-red-700",
+    Execution: "bg-indigo-100 text-indigo-700",
+  },
+
+  MATERIAL_STATUS: {
+    Empty: "bg-gray-100 text-gray-700",
+    Loaded: "bg-green-100 text-green-700",
+    Hold: "bg-yellow-100 text-yellow-700",
+    PartialLoaded: "bg-orange-100 text-orange-700",
+  },
+
+  LOCATION_STATUS: {
+    Empty: "bg-gray-100 text-gray-700",
+    Production: "bg-blue-100 text-blue-700",
+    FGStore: "bg-indigo-100 text-indigo-700",
+    Customer: "bg-green-100 text-green-700",
+    Maintenance: "bg-yellow-100 text-yellow-700",
+  },
+
+  GATE_STATUS: {
+    TrolleyIn: "bg-green-100 text-green-700",
+    TrolleyOut: "bg-red-100 text-red-700",
+    Production: "bg-blue-100 text-blue-700",
+    FGStore: "bg-indigo-100 text-indigo-700",
+     Maintenance: "bg-yellow-100 text-yellow-700",
+     TrolleyOut: "bg-green-100 text-green-700",
+     TrolleyOut: "bg-green-100 text-green-700",
+  },
+
+  MOVEMENT_TYPE: {
+    RFID: "bg-purple-100 text-purple-700",
+    MobileDevice: "bg-cyan-100 text-cyan-700",
+  },
+};
+/* --------- STATUS BADGE --------- */
+const StatusBadge = ({ value, type }) => {
+  const color =
+    STATUS_COLORS[type]?.[value] ||
+    "bg-gray-100 text-gray-600";
 
   return (
-    <span
-      className={`px-2 py-1 rounded-full text-xs font-semibold ${
-        colorMap[value] || "bg-gray-100 text-gray-600"
-      }`}
-    >
+    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${color}`}>
       {value}
     </span>
   );
 };
-
 const TrolleyHistory = () => {
   const [trolley, setTrolley] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [data, setData] = useState([]);
+const [loading, setLoading] = useState(false)
+const BASE = (import.meta.env.VITE_BACKEND_BASE_URL || "").replace(/\/+$/, "");
+
+const fetchTrolleyHistory = async () => {
+  if (!trolley || !startDate || !endDate) {
+    alert("Please select Trolley ID, Start Date and End Date");
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const response = await axios.post(
+      `${BASE}/TrolleyHistory/TrolleyHistory`,
+      {
+        trolleyId: trolley,
+        startDate,
+        endDate,
+      }
+    );
+
+    setData(response.data.data || []);
+  } catch (error) {
+    console.error("API Error:", error);
+    alert("Failed to fetch data");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <DashboardLayout>
@@ -117,7 +132,14 @@ const TrolleyHistory = () => {
               onChange={(e) => setEndDate(e.target.value)}
               className="border rounded-lg px-3 py-2"
             />
+             <button
+  onClick={fetchTrolleyHistory}
+  className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+>
+  Search
+</button>
           </div>
+         
         </div>
 
         {/* ---------- TABLE CARD ---------- */}
@@ -137,6 +159,8 @@ const TrolleyHistory = () => {
                     "Movement Status",
                     "Trolley Status",
                     "Material Status",
+                    "Gate Status",
+                    "MovementType",
                     "Timestamp",
                     "User ID",
                   ].map((h) => (
@@ -148,32 +172,42 @@ const TrolleyHistory = () => {
               </thead>
 
               <tbody>
-                {tableData.map((row, i) => (
+               {data.map((row, i) => (
                   <tr
-                    key={i}
-                    className="border-b hover:bg-blue-50 transition-all duration-200 text-black"
-                  >
-                    <td className="p-2 text-center font-semibold ">
-                      {row.trolleyId}
-                    </td>
-                    <td className="p-2 text-center">
-                      <StatusBadge value={row.pmStatus} />
-                    </td>
-                    <td className="p-2 text-center">
-                      <StatusBadge value={row.locationStatus} />
-                    </td>
-                    <td className="p-2 text-center">
-                      <StatusBadge value={row.movementStatus} />
-                    </td>
-                    <td className="p-2 text-center">
-                      <StatusBadge value={row.trolleyStatus} />
-                    </td>
-                    <td className="p-2 text-center">
-                      <StatusBadge value={row.materialStatus} />
-                    </td>
-                    <td className="p-2 text-center">{row.timestamp}</td>
-                    <td className="p-2 text-center">{row.userId}</td>
-                  </tr>
+  key={i}
+  className="border-b hover:bg-blue-50 transition-all duration-200 text-black font-weight-bold text-m "
+>
+   <td className="p-2 text-center">{row.TrolleyID}</td>
+ <td className="p-2 text-center">
+  <StatusBadge value={row.PMStatusDesc} type="PM_STATUS" />
+</td>
+
+<td className="p-2 text-center">
+  <StatusBadge value={row.LocationStatusDesc} type="LOCATION_STATUS" />
+</td>
+
+<td className="p-2 text-center">
+  <StatusBadge value={row.MovementStatusDesc} type="MOVEMENT_STATUS" />
+</td>
+
+<td className="p-2 text-center">
+  <StatusBadge value={row.TrolleyStatusDesc} type="TROLLEY_STATUS" />
+</td>
+
+<td className="p-2 text-center">
+  <StatusBadge value={row.MaterialStatusDesc} type="MATERIAL_STATUS" />
+</td>
+
+<td className="p-2 text-center">
+  <StatusBadge value={row.GateStatusDesc} type="GATE_STATUS" />
+</td>
+
+<td className="p-2 text-center">
+  <StatusBadge value={row.MovementTypeDesc} type="MOVEMENT_TYPE" />
+</td>
+ <td className="p-2 text-center">{row.Timestamp}</td>
+                    <td className="p-2 text-center">{row.UserID}</td>
+</tr>
                 ))}
               </tbody>
             </table>

@@ -133,7 +133,7 @@ const [sortOrder, setSortOrder] = useState("desc");
 
   return (
     <DashboardLayout>
-      <div className="px-6 py-4 space-y-8 text-black">
+      <div className="px-8 py-4 space-y-6  text-black">
 
         {/* ---------- HEADER ---------- */}
         <motion.div
@@ -191,7 +191,7 @@ const [sortOrder, setSortOrder] = useState("desc");
         </div>
 
         {/* ---------- SOURCE → DESTINATION TABLE ---------- */}
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="bg-white rounded-xl shadow-md overflow-hidden ">
           <div className="grid grid-cols-3 bg-blue-100 font-bold p-3">
             <span>Source</span>
             <span>Destination</span>
@@ -229,12 +229,12 @@ const [sortOrder, setSortOrder] = useState("desc");
             data={wrongLocationChart}
           />
         </div>
-<div className="bg-white rounded-xl shadow-md p-4 mb-6 ">
-  <div className="grid grid-cols-1 md:grid-cols-5 gap-4 justify-end  align-items-right">
-
+<div className="flex justify-end w-full">
+  <div className="flex items-center gap-4  bg-white p-2 rounded-xl shadow-md w-full justify-end border  ml-auto ">
+ <h2 className="font-bold text-black p-4 flex-grow">Error Movement History Table  </h2>
     {/* Status Filter */}
     <select
-      className="border rounded-lg px-3 py-2 justify-end bg-blue-100"
+      className="border rounded-lg px-8 py-2 justify-end bg-white-100"
       value={statusFilter}
       onChange={(e) => setStatusFilter(e.target.value)}
     >
@@ -245,7 +245,7 @@ const [sortOrder, setSortOrder] = useState("desc");
 
     {/* Move Type Filter */}
     <select
-      className="border rounded-lg px-3 py-2 justify-end bg-blue-100"
+      className="border rounded-lg px-10 py-2 justify-end bg-white-100"
       value={moveTypeFilter}
       onChange={(e) => setMoveTypeFilter(e.target.value)}
     >
@@ -257,7 +257,7 @@ const [sortOrder, setSortOrder] = useState("desc");
 
     {/* Sort */}
     <select
-      className="border rounded-lg px-3 py-2 justify-end bg-blue-100"
+      className="border rounded-lg px-10 py-2 justify-end bg-white-100"
       value={sortOrder}
       onChange={(e) => setSortOrder(e.target.value)}
     >
@@ -270,8 +270,6 @@ const [sortOrder, setSortOrder] = useState("desc");
 
         {/* ---------- HISTORY TABLE ---------- */}
         <div className="bg-white rounded-xl shadow-md p-4">
-          <h3 className="font-bold mb-3 text-center">Error Movement History</h3>
-
           <table className="w-full text-sm">
             <thead className="bg-blue-600 text-white">
               <tr>

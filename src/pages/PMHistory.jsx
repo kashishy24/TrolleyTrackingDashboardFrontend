@@ -84,15 +84,15 @@ const PMHistory = () => {
 
   return (
     <DashboardLayout>
-      <div className="p-1 space-y-6">
+      <div className="p-6 space-y-6">
 
         {/* ---------- DATE FILTER ---------- */}
-        <div className="flex justify-end">
-          <div className="flex items-center gap-4  bg-white p-2 rounded-xl shadow-md border w-fit">
-
+        <div className="flex justify-end w-full">
+          <div className="flex items-center gap-4  bg-white p-2 rounded-xl shadow-md border justify-end w-full">
+            <h2 className="font-bold text-black p-4 flex-grow"> Preventive Maintenance History Summary </h2>
             <div className="flex items-center gap-2 border rounded-lg px-3 py-1">
               <label className="text-sm font-semibold whitespace-nowrap text-black">
-                Start
+                Start Date
               </label>
               <input
                 type="date"
@@ -104,7 +104,7 @@ const PMHistory = () => {
 
             <div className="flex items-center gap-2 border rounded-lg px-3 py-1">
               <label className="text-sm font-semibold whitespace-nowrap text-black">
-                End
+                End Date
               </label>
               <input
                 type="date"
@@ -138,15 +138,15 @@ const PMHistory = () => {
 
         {/* ---------- LINE CHART ---------- */}
         <div className="bg-white rounded-xl shadow-md p-6">
-          <h3 className="font-bold text-center mb-2">
-            PM Trend (Day Wise)
+          <h3 className="font-bold text-center mb-2 text-black">
+            Preventive Maintenance Trend (Day Wise)
           </h3>
 
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" />
-              <YAxis />
+              <XAxis dataKey="day" tick={{ fill: "#000", fontWeight: 300 }} />
+              <YAxis  tick={{ fill: "#000", fontWeight: 300 }}/>
               <Tooltip />
               <Legend />
               <Line type="monotone" dataKey="plan" stroke="#1e40af" />
@@ -156,22 +156,20 @@ const PMHistory = () => {
         </div>
 
         {/* ---------- TROLLEY FILTER ---------- */}
-        <div className="flex justify-end">
+        <div className="flex justify-end p-2 bg-white rounded-xl shadow-md w-full">
+              <h2 className="font-bold text-black p-4 flex-grow"> Preventive Maintenance Checklist History Table  </h2>
+          <h1 className="mr-4 self-center text-black font-semibold bg-white p-2 pl-10 pr-10 rounded-lg border outline">Trolley ID -:</h1>
           <input
             type="text"
             placeholder="Enter Trolley ID"
             value={trolleyId}
             onChange={(e) => setTrolleyId(e.target.value)}
-            className="border rounded-lg px-4 py-2 w-64 shadow-md"
+            className="border rounded-lg px-4 py-2 w-64 shadow-md text-black"
           />
         </div>
 
         {/* ---------- HISTORY TABLE ---------- */}
         <div className="bg-white rounded-xl shadow-md p-4">
-          <h3 className="font-bold mb-3 text-center">
-            PM Checklist History
-          </h3>
-
           <table className="w-full text-sm">
             <thead className="bg-blue-600 text-white">
               <tr>
@@ -193,7 +191,7 @@ const PMHistory = () => {
                 </tr>
               ) : (
                 filteredData.map((row, i) => (
-                  <tr key={i} className="border-b hover:bg-gray-100">
+                  <tr key={i} className="border-b hover:bg-gray-100 text-black">
                     <td className="p-2 text-center">{row.trolleyId}</td>
                     <td className="p-2 text-center">{row.CheckListName}</td>
                     <td className="p-2 text-center">{row.StartTime}</td>

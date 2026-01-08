@@ -200,13 +200,12 @@ const filteredTableData = tableData.filter((row) => {
           </motion.div>
         </div>
         {/* ---------- Date Filter ---------- */}
-<div className="flex  items-center bg-white rounded-xl shadow-md p-2 border border-gray-200">
-  {/* <h3 className="font-bold text-base justify-center ">
-    PM Status Table
-  </h3> */}
+<div className="flex ">
 
   {/* Date Filters */}
-  <div className="flex items-center gap-4 justify-end ml-auto">
+  <div className="flex items-center gap-4  bg-white p-2 rounded-xl shadow-md border w-full justify-end">
+
+    <h2 className="font-bold text-black p-4 flex-grow"> Preventive Maintenance Details Table  </h2>
 
     {/* Start Date */}
     <div className="flex items-center gap-2 border rounded-lg px-3 py-1">
@@ -233,8 +232,7 @@ const filteredTableData = tableData.filter((row) => {
         className="outline-none text-sm bg-transparent"
       />
     </div>
-
-  </div>
+</div>
 </div>
 
 

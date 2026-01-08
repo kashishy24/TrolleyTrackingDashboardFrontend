@@ -81,26 +81,26 @@ const TrolleyBreakdown = () => {
 
   return (
     <DashboardLayout>
-      <div className="p-4 w-full">
-        {/* <h2 className="text-center text-3xl font-bold mb-6 text-gray-900">
-          Breakdown History
-        </h2> */}
+      <div className="p-6 w-full">
 
         {/* ---------------- FILTER BAR ---------------- */}
-        <div className="flex bg-white p-4 rounded-xl shadow mb-6">
-          <div className="ml-auto flex items-end gap-4">
+        <div className="flex">
+        
+        <div className="flex bg-white p-2 rounded-xl shadow mb-4 justify-end w-full">
+            <h2 className="font-bold text-black p-4 flex-grow"> Trolley Breakdown History </h2>
+          <div className="flex items-center gap-2 border rounded-lg px-3 py-1 ">
             <div>
-              <label className="block text-sm font-semibold">Start Date</label>
+              <label className="text-sm font-semibold whitespace-nowrap text-black "> Start Date </label>
               <input
                 type="date"
-                className="border px-3 py-2 rounded-lg w-40"
+                className="border px-3 py-2 rounded-lg w-40 text-black"
                 value={rangeStart}
                 onChange={(e) => setRangeStart(e.target.value)}
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold">End Date</label>
+              <label className="text-sm font-semibold whitespace-nowrap text-black"> End Date </label>
               <input
                 type="date"
                 className="border px-3 py-2 rounded-lg w-40"
@@ -110,31 +110,31 @@ const TrolleyBreakdown = () => {
             </div>
 
             <button
-              className="bg-gray-900 text-white px-4 mt-5 py-2 rounded-lg"
+              className="bg-gray-900 text-white p-2 rounded-lg hover:bg-gray-800 text-sm font-semibold whitespace-nowrap text-black"
               onClick={applyFilter}
             >
               Apply
             </button>
           </div>
         </div>
-
+</div>
         {/* ---------------- SUMMARY CARDS ---------------- */}
         <div className="grid grid-cols-4 gap-3 mb-6">
           {stats.map((item, index) => (
             <div key={index} className="bg-white shadow rounded-xl p-4 text-center">
-              <h3 className="text-lg font-semibold text-gray-700">
+              <h3 className="text-m font-semibold text-black">
                 {item.label}
               </h3>
 
               {item.mould ? (
                 <>
-                  <p className="text-2xl font-bold mt-2">{item.mould}</p>
-                  <p className="text-xl font-semibold text-blue-700">
+                  <p className="font-sm mt-2 text-black">{item.mould}</p>
+                  <p className=" font-sm text-blue-700">
                     {item.duration}
                   </p>
                 </>
               ) : (
-                <p className="text-3xl font-bold mt-2">{item.value}</p>
+                <p className="text-black font-sm mt-2">{item.value}</p>
               )}
             </div>
           ))}
@@ -143,16 +143,16 @@ const TrolleyBreakdown = () => {
         {/* ---------------- CHARTS ---------------- */}
         <div className="grid grid-cols-1 gap-8">
           {/* Duration Chart */}
-          <div className="h-80 bg-white rounded-xl shadow-md p-6">
-            <h3 className="font-semibold text-center mb-4">
+          <div className="h-90 bg-white rounded-xl shadow-md p-10">
+            <h3 className="font-semibold text-black text-center mb-4">
               Breakdown Duration
             </h3>
 
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
+                <XAxis dataKey="date" tick={{ fill: "#000", fontWeight: 300 }} />
+                <YAxis  tick={{ fill: "#000", fontWeight: 300 }}/>
                 <Tooltip />
                 <Bar dataKey="Duration" fill="#2563eb" />
               </BarChart>
@@ -160,16 +160,16 @@ const TrolleyBreakdown = () => {
           </div>
 
           {/* Occurrence Chart */}
-          <div className="h-80 bg-white rounded-xl shadow-md p-6">
-            <h3 className="font-semibold text-center mb-4">
+          <div className="h-90 bg-white rounded-xl shadow-md p-10">
+            <h3 className="font-semibold text-black text-center mb-4">
               Breakdown Occurrence
             </h3>
 
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
+                <XAxis dataKey="date" tick={{ fill: "#000", fontWeight: 300 }}/>
+                <YAxis tick={{ fill: "#000", fontWeight: 300 }} />
                 <Tooltip />
                 <Bar dataKey="Occurence" fill="#f97316" />
               </BarChart>
@@ -179,15 +179,15 @@ const TrolleyBreakdown = () => {
 
         {/* ---------------- TABLE ---------------- */}
         <div className="bg-white p-4 rounded-xl shadow-md mt-10">
-          <h3 className="text-2xl font-bold mb-4 text-center">
+          <h3 className="text-black font-bold mb-4 text-center">
             Breakdown Details Table
           </h3>
 
           <div style={{ maxHeight: 420, overflow: "auto" }}>
             <table className="w-full border-collapse">
-              <thead className="bg-blue-700 text-white text-sm sticky top-0">
+              <thead className="bg-blue-700 text-white text-sm sticky top-0 text-black">
                 <tr>
-                  <th className="p-2 border">ID</th>
+                  <th className="p-2 border ">ID</th>
                   <th className="p-2 border">Reason</th>
                   <th className="p-2 border">Remark</th>
                   <th className="p-2 border">Trolley</th>
@@ -198,7 +198,7 @@ const TrolleyBreakdown = () => {
               </thead>
               <tbody>
                 {tableData.map((r, i) => (
-                  <tr key={i} className="hover:bg-gray-100">
+                  <tr key={i} className="border-b hover:bg-blue-50 text-sm transition-all duration-200 text-black">
                     <td className="p-2 border text-center">{r.BreakDownID}</td>
                     <td className="p-2 border text-center">{r.Reason}</td>
                     <td className="p-2 border text-center">{r.Remark}</td>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DashboardLayout from "../partials/DashboardLayout";
 import {
   MdLocalShipping,
@@ -28,27 +28,18 @@ const StatCard = ({ title, items, icon: Icon }) => (
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.4 }}
     whileHover={{ scale: 1.03 }}
-    className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 hover:shadow-xl transition text-black"
+    className="bg-white rounded-xl shadow-md p-4 hover:shadow-xl text-black"
   >
-    <div className="flex items-center gap-2 mb-3 justify-center align-center">
+    <div className="flex items-center gap-2 mb-3 justify-center">
       <Icon className="text-blue-600 text-xl" />
-      <h3 className="text-sm font-semibold text-black-700 text-center  dark:text-gray-200">
-        {title}
-      </h3>
+      <h3 className="text-sm font-semibold">{title}</h3>
     </div>
 
     <div className="space-y-2 text-sm">
       {items.map((item, index) => (
-        <div
-          key={index}
-          className="flex justify-between bg-blue-50 dark:bg-gray-700 px-3 py-1 rounded"
-        >
-          <span className="text-black-600 dark:text-black-300">
-            {item.label}
-          </span>
-          <span className="font-semibold text-gray-900 dark:text-white">
-            {item.value}
-          </span>
+        <div key={index} className="flex justify-between bg-blue-50 px-3 py-1 rounded">
+          <span>{item.label}</span>
+          <span className="font-semibold">{item.value}</span>
         </div>
       ))}
     </div>
@@ -62,115 +53,24 @@ const ChartCard = ({ title, data, barColor }) => (
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.6 }}
     viewport={{ once: true }}
-    className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 text-black  text-center hover:shadow-xl"
+    className="bg-white rounded-xl shadow-md p-4 text-center"
   >
-    <h3 className="text-sm font-semibold mb-3 text-black-700 dark:text-black-200 font-weight-bold">
-      {title}
-    </h3>
-
+    <h3 className="text-sm font-semibold mb-3">{title}</h3>
     <div className="h-56">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-          <XAxis dataKey="name"  tick={{ fill: "#000", fontWeight: 300 }} />
-          <YAxis  tick={{ fill: "#000", fontWeight: 300 }}/>
+          <XAxis dataKey="name" />
+          <YAxis />
           <Tooltip />
-          <Bar
-            dataKey="value"
-            fill={barColor}
-            radius={[6, 6, 0, 0]}
-            animationDuration={1200}
-          />
+          <Bar dataKey="value" fill={barColor} radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>
   </motion.div>
 );
 
-/* ------------------ DATA ------------------ */
-const trolleyBreakdownData = [
-  { name: "Empty", value: 1000 },
-  { name: "FG", value: 700 },
-  { name: "Shopfloor", value: 300 },
-  { name: "Transit", value: 900 },
-  { name: "Breakdown", value: 94 },
-];
-
-const trolleyStatusData = [
-  { name: "OK", value: 2900 },
-  { name: "Breakdown", value: 25 },
-  { name: "PM", value: 25 },
-  { name: "Scrap", value: 50 },
-];
-
-const pmStatusData = [
-  { name: "Normal", value: 900 },
-  { name: "Alert", value: 900 },
-  { name: "Warning", value: 900 },
-  { name: "Alarm", value: 900 },
-  { name: "Execution", value: 900 },
-  { name: "Completed", value: 900 },
-];
-
-/* 🔥 NEW: Hourly Movement Trend */
-const trolleyMovementHourly = [
-  { hour: "08:00", customerToStore: 10, storeToProduction: 15, productionToFGStore: 20, FGStoreToCustomer: 25 },
-  { hour: "09:00", customerToStore: 18, storeToProduction: 22, productionToFGStore: 25, FGStoreToCustomer: 30 },
-  { hour: "10:00", customerToStore: 14, storeToProduction: 26, productionToFGStore: 30, FGStoreToCustomer: 35 },
-  { hour: "11:00", customerToStore: 20, storeToProduction: 30, productionToFGStore: 35, FGStoreToCustomer: 40 },
-  { hour: "12:00", customerToStore: 16, storeToProduction: 28, productionToFGStore: 25, FGStoreToCustomer: 31 },
-  { hour: "13:00", customerToStore: 22, storeToProduction: 35, productionToFGStore: 40, FGStoreToCustomer: 45 },
-];
-
-const abnormalMovementSummary = {
-  duplicate: 23,
-  wrong: 12,
-};
-
-const abnormalMovementTable = [
-  { source: "Production", destination: "Empty", value: 2 },
-  { source: "FG Store", destination: "Production", value: 5 },
-  { source: "Customer", destination: "FG Store", value: 3 },
-];
-
-const duplicateLocationWise = [
-  { location: "Empty", value: 8 },
-  { location: "Production", value: 6 },
-  { location: "FG Store", value: 5 },
-  { location: "Customer", value: 4 },
-];
-
-const wrongLocationWise = [
-  { location: "Empty", value: 3 },
-  { location: "Production", value: 4 },
-  { location: "FG Store", value: 2 },
-  { location: "Customer", value: 3 },
-];
-const ProgressBar = ({ value, max = 10 }) => {
-  const width = `${(value / max) * 100}%`;
-
-  return (
-    <div className="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
-      <motion.div
-        initial={{ width: 0 }}
-        animate={{ width }}
-        transition={{ duration: 0.8 }}
-        className="h-6 bg-blue-600 text-white text-xs flex items-center justify-end pr-2 rounded-full"
-      >
-        {value}
-      </motion.div>
-    </div>
-  );
-};
-const duplicateLocationChart = duplicateLocationWise.map(item => ({
-  name: item.location,
-  value: item.value,
-}));
-
-const wrongLocationChart = wrongLocationWise.map(item => ({
-  name: item.location,
-  value: item.value,
-}));
+// vertical bar chart
 const VerticalBarCard = ({ title, data, barColor }) => (
   <motion.div
     initial={{ opacity: 0, y: 30 }}
@@ -204,95 +104,158 @@ const VerticalBarCard = ({ title, data, barColor }) => (
 );
 
 
-
-
+const abnormalMovementTable = [
+  { source: "Production", destination: "Empty", value: 2 },
+  { source: "FG Store", destination: "Production", value: 5 },
+  { source: "Customer", destination: "FG Store", value: 3 },
+];
 /* ------------------ HOME ------------------ */
 const Home = () => {
+  const [liveStatus, setLiveStatus] = useState(null);
+  const [hourlyTrend, setHourlyTrend] = useState([]);
+  const [abnormalSummary, setAbnormalSummary] = useState({ duplicate: 0, wrong: 0 });
+  const [duplicateLocation, setDuplicateLocation] = useState([]);
+  const [wrongLocation, setWrongLocation] = useState([]);
+
+  /* ------------------ API CALLS ------------------ */
+  useEffect(() => {
+    fetch("http://192.168.1.13:3007/api/Home/TrolleyLiveStatus")
+      .then(res => res.json())
+      .then(res => setLiveStatus(res.data));
+
+    fetch("http://192.168.1.13:3007/api/Home/TrolleyLocationHourlySummary")
+      .then(res => res.json())
+      .then(res => {
+        const customer = res.data.find(x => x.locationName === "Customer");
+        if (customer) {
+          setHourlyTrend(
+            customer.hourly.map(h => ({
+              hour: h.hour,
+              customerToStore: h.value,
+              storeToProduction: h.value,
+              productionToFGStore: h.value,
+              FGStoreToCustomer: h.value,
+            }))
+          );
+        }
+      });
+
+    fetch("http://192.168.1.13:3007/api/Home/TrolleyTotalDuplicateWrongMovement")
+      .then(res => res.json())
+      .then(res => setAbnormalSummary({
+        duplicate: res.data.DuplicateMovement,
+        wrong: res.data.WrongMovement
+      }));
+
+    fetch("http://192.168.1.13:3007/api/Home/TrolleyDupWrongMovementLocationWise")
+      .then(res => res.json())
+      .then(res => {
+        setDuplicateLocation(
+          res.data.duplicate.map(d => ({ name: d.LocationName, value: d.DuplicateCount }))
+        );
+        setWrongLocation(
+          res.data.wrong.map(w => ({ name: w.LocationName, value: w.WrongCount }))
+        );
+      });
+  }, []);
+
+  if (!liveStatus) return null;
+
+  /* ------------------ DATA MAPPING ------------------ */
+  const trolleyLocationData = [
+    { name: "Empty", value: liveStatus.locationStatus.Empty },
+    { name: "FG Store", value: liveStatus.locationStatus.FGStore },
+    { name: "Production", value: liveStatus.locationStatus.Production },
+    { name: "Customer", value: liveStatus.locationStatus.Customer },
+    { name: "Maintenance", value: liveStatus.locationStatus.Maintenance },
+  ];
+
+  const trolleyStatusData = [
+    { name: "OK", value: liveStatus.locationStatus.OKTrolleys },
+    { name: "Breakdown", value: liveStatus.locationStatus.Breakdown },
+    { name: "PM", value: liveStatus.locationStatus.PM },
+    { name: "Scrap", value: liveStatus.locationStatus.Scrap },
+  ];
+
+  const pmStatusData = [
+    { name: "Normal", value: liveStatus.locationStatus.PM_Normal },
+    { name: "Alert", value: liveStatus.locationStatus.PM_Alert },
+    { name: "Warning", value: liveStatus.locationStatus.PM_Warning },
+    { name: "Alarm", value: liveStatus.locationStatus.PM_Alarm },
+    { name: "Execution", value: liveStatus.locationStatus.PM_Execution },
+    { name: "Completed", value: liveStatus.pmCompletedToday },
+  ];
+
+  const trolleyBreakdownData = [
+    { name: "Total Breakdown", value: liveStatus.breakdown.TotalBreakdown },
+    { name: "Under Maintenance", value: liveStatus.breakdown.UnderMaintenance },
+    { name: "Repair Today", value: liveStatus.repairedToday },
+    { name: "Scrap Today", value: liveStatus.locationStatus.Scrap },
+  ];
+
   return (
     <DashboardLayout>
+
       {/* TOP STATS */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-6 mr-4 pl-10 font-bold text-black">
-        <StatCard
-          title="By Location"
-          icon={MdLocalShipping}
-          items={[
-            { label: "Total Trolleys", value: 3000 },
-            { label: "Empty", value: 1000 },
-            { label: "FG Store", value: 700 },
-            { label: "Shopfloor", value: 300 },
-            { label: "In Transit", value: 900 },
-            { label: "Breakdown", value: 94 },
-            { label: "Under PM", value: 6 },
-            { label: "Scrap", value: 0 },
-          ]}
-           className="bg-white rounded-xl shadow-md p-4 hover:shadow-xl text-black"
+        <StatCard title="By Location" icon={MdLocalShipping} items={[
+          { label: "Total Trolleys", value: liveStatus.locationStatus.TotalTrolleys },
+          { label: "Empty", value: liveStatus.locationStatus.Empty },
+          { label: "FG Store", value: liveStatus.locationStatus.FGStore },
+          { label: "Production", value: liveStatus.locationStatus.Production },
+          { label: "Customer", value: liveStatus.locationStatus.Customer },
+          { label: "Maintenance", value: liveStatus.locationStatus.Maintenance },
+        ]}
+          className="bg-white rounded-xl shadow-md p-4 hover:shadow-xl text-black"
         />
 
-        <StatCard
-          title="By Trolley Status"
-          icon={MdCheckCircle}
-          items={[
-            { label: "OK Trolleys", value: 2900 },
-            { label: "Breakdown", value: 25 },
-            { label: "PM", value: 25 },
-            { label: "Scrap", value: 50 },
-          ]}
-        />
+        <StatCard title="By Trolley Status" icon={MdCheckCircle} items={[
+          { label: "OK Trolleys", value: liveStatus.locationStatus.OKTrolleys },
+          { label: "Breakdown", value: liveStatus.locationStatus.Breakdown },
+          { label: "PM", value: liveStatus.locationStatus.PM },
+          { label: "Scrap", value: liveStatus.locationStatus.Scrap },
+        ]} />
 
-        <StatCard
-          title="By PM Status"
-          icon={MdBuild}
-          items={[
-            { label: "Normal", value: 900 },
-            { label: "Alert", value: 900 },
-            { label: "Warning", value: 900 },
-            { label: "Alarm", value: 900 },
-            { label: "Execution", value: 900 },
-            { label: "Completed", value: 900 },
-          ]}
-        />
+        <StatCard title="By PM Status" icon={MdBuild} items={pmStatusData} />
 
-        <StatCard
-          title="Trolley Breakdown"
-          icon={MdWarning}
-          className="text-black text-bold text-center"
-          items={[
-            { label: "Total Breakdown", value: 15 },
-            { label: "Under Maintenance", value: 10 },
-            { label: "Repaired Today", value: 5 },
-            { label: "Scrapped Today", value: 5 },
-          ]}
-        />
+        <StatCard title="Trolley Breakdown" icon={MdWarning} items={[
+          { label: "Total Breakdown", value: liveStatus.breakdown.TotalBreakdown },
+          { label: "Under Maintenance", value: liveStatus.breakdown.UnderMaintenance },
+          { label: "Repaired Today", value: liveStatus.repairedToday },
+          { label: "Scrapped Today", value: liveStatus.locationStatus.Scrap },
+        ]} />
       </div>
 
       {/* CHARTS */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8 pl-10 pr-4">
-        <ChartCard
-          title="Trolley Location"
-          data={trolleyBreakdownData}
-          barColor="#4466efff"
-        />
-
-        <ChartCard
-          title="Trolley Status"
-          data={trolleyStatusData}
-          barColor="#0f0780ff"
-        />
-
-        <ChartCard
-          title="Trolley Breakdown"
-          data={trolleyBreakdownData}
-          barColor="#0f0780ff"
-        />
-
-        <ChartCard
-          title="PM Status"
-          data={pmStatusData}
-          barColor="#4466efff"
-        />
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8 pl-10">
+        <ChartCard title="Trolley Location" data={trolleyLocationData} barColor="#4466ef" />
+        <ChartCard title="Trolley Status" data={trolleyStatusData} barColor="#0f0780" />
+        <ChartCard title="Trolley Breakdown" data={trolleyBreakdownData} barColor="#0f0780" />
+        <ChartCard title="PM Status" data={pmStatusData} barColor="#4466ef" />
       </div>
 
-      {/* ------------------ MOVEMENT + HOURLY TREND ------------------ */}
+      {/* EVERYTHING BELOW REMAINS EXACTLY SAME */}
+      {/* Movement, abnormal movement, hourly charts can be connected later */}
+
+      {/* Hourly Trend */}
+      {/* <div className="mt-8 pl-10 pr-4">
+        <h2 className="text-lg font-semibold text-center bg-white rounded-full p-3">
+          🚚 Hourly Movement Trend
+        </h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={hourlyTrend}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="hour" />
+            <YAxis />
+            <Tooltip />
+            <Line  type="monotone" dataKey="customerToStore" stroke="#2563eb" />
+            <Line type="monotone" dataKey="storeToProduction" stroke="#16a34a"/>
+            <Line  type="monotone" dataKey="productionToFGStore" stroke="#9333ea" />
+            <Line type="monotone"  dataKey="FGStoreToCustomer" stroke="#ea580c" />
+          </LineChart>
+        </ResponsiveContainer>
+      </div> */}
+
       <div className="mt-8 pl-10 pr-4 mb-8">
         <h2 className="text-lg font-semibold rounded-full bg-white outline text-gray-800 mb-4 p-4 justify-center text-center">
           🚚 Trolley Movement
@@ -300,63 +263,62 @@ const Home = () => {
 
         {/* Cards */}
         <div className="flex flex-wrap gap-8 justify-center">
-  {/* Customer → Empty Store */}
-  <motion.div
-    whileHover={{ scale: 1.05 }}
-    className="flex bg-white rounded-xl shadow-md p-4 text-black items-center gap-3"
-  >
-    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-100 text-black-600 text-xl">
-      🚚
-    </div>
-    <div>
-      <p className="text-sm text-black">Customer → Empty Store</p>
-      <p className="text-2xl font-semibold text-gray-800">2900</p>
-    </div>
-  </motion.div>
+          {/* Customer → Empty Store */}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="flex bg-white rounded-xl shadow-md p-4 text-black items-center gap-3"
+          >
+            <div className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-100 text-black-600 text-xl">
+              🚚
+            </div>
+            <div>
+              <p className="text-sm text-black">Customer → Empty Store</p>
+              <p className="text-2xl font-semibold text-gray-800">2900</p>
+            </div>
+          </motion.div>
 
-  {/* Empty Store → Production */}
-  <motion.div
-    whileHover={{ scale: 1.05 }}
-    className="flex items-center gap-3 bg-white rounded-xl shadow-md p-4"
-  >
-    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-100 text-green-600 text-xl">
-      🏭
-    </div>
-    <div>
-      <p className="text-sm text-black">Empty Store → Production</p>
-      <p className="text-2xl font-semibold text-gray-800">2900</p>
-    </div>
-  </motion.div>
+          {/* Empty Store → Production */}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center gap-3 bg-white rounded-xl shadow-md p-4"
+          >
+            <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-100 text-green-600 text-xl">
+              🏭
+            </div>
+            <div>
+              <p className="text-sm text-black">Empty Store → Production</p>
+              <p className="text-2xl font-semibold text-gray-800">2900</p>
+            </div>
+          </motion.div>
 
-  {/* Production → FG Store */}
-  <motion.div
-    whileHover={{ scale: 1.05 }}
-    className="flex items-center gap-3 bg-white rounded-xl shadow-md p-4"
-  >
-    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-100 text-green-600 text-xl">
-      🏭
-    </div>
-    <div>
-      <p className="text-sm text-black">Production → FG Store</p>
-      <p className="text-2xl font-semibold text-gray-800">2900</p>
-    </div>
-  </motion.div>
+          {/* Production → FG Store */}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center gap-3 bg-white rounded-xl shadow-md p-4"
+          >
+            <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-100 text-green-600 text-xl">
+              🏭
+            </div>
+            <div>
+              <p className="text-sm text-black">Production → FG Store</p>
+              <p className="text-2xl font-semibold text-gray-800">2900</p>
+            </div>
+          </motion.div>
 
-  {/* FG Store  → IN Transt */}
-  <motion.div
-    whileHover={{ scale: 1.05 }}
-    className="flex items-center gap-3 bg-white rounded-xl shadow-md p-4"
-  >
-    <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-100 text-green-600 text-xl">
-      🏭
-    </div>
-    <div>
-      <p className="text-m text-black">FG Store → IN Transt</p>
-      <p className="text-2xl font-semibold text-gray-800">2</p>
-    </div>
-  </motion.div>
-</div>
-
+          {/* FG Store  → IN Transt */}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="flex items-center gap-3 bg-white rounded-xl shadow-md p-4"
+          >
+            <div className="w-12 h-12 flex items-center justify-center rounded-full bg-green-100 text-green-600 text-xl">
+              🏭
+            </div>
+            <div>
+              <p className="text-m text-black">FG Store → IN Transt</p>
+              <p className="text-2xl font-semibold text-gray-800">2</p>
+            </div>
+          </motion.div>
+        </div>
 
         {/* Hourly Trend */}
         <motion.div
@@ -369,63 +331,33 @@ const Home = () => {
           <h3 className="text-md font-semibold text-black text-center mb-4">
             ⏱️ Hourly Movement Trend
           </h3>
-
-          <ResponsiveContainer width="100%" height={280}>
-           <LineChart
-    data={trolleyMovementHourly}
-    margin={{ top: 5, right: 20, left: 10, bottom: 5 }} // tighten spacing
-  >
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={hourlyTrend} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" />
-             <XAxis
-  dataKey="hour"
-  interval={0} // ensures all labels show and are evenly spaced
-  padding={{ left: 10, right: 10 }} // reduce extra padding
-   tick={{ fill: "#000", fontWeight: 300 }}
-/>
-<YAxis
-  domain={['dataMin - 5', 'dataMax + 5']} // optional, tighten Y-axis
-   tick={{ fill: "#000", fontWeight: 300 }}
-/>
-Also, for 
+              <XAxis dataKey="hour"
+                interval={0} // ensures all labels show and are evenly spaced
+                padding={{ left: 10, right: 10 }} // reduce extra padding
+                tick={{ fill: "#000", fontWeight: 300 }}
+              />
+              <YAxis domain={['dataMin - 5', 'dataMax + 5']} // optional, tighten Y-axis
+                tick={{ fill: "#000", fontWeight: 300 }} />
               <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="customerToStore"
-                stroke="#2563eb"
-                strokeWidth={3}
-                name="Customer → Store"
-              />
-              <Line
-                type="monotone"
-                dataKey="storeToProduction"
-                stroke="#e39ed8ff"
-                strokeWidth={3}
-                name="Store → Production"
-              />
-              <Line
-                type="monotone"
-                dataKey="productionToFGStore"
-                stroke="#1f4158ff"
-                strokeWidth={3}
-                name="Production → FG Store"
-              />
-              <Line
-                type="monotone"
-                dataKey="FGStoreToCustomer"
-                stroke="#cd941aff"
-                strokeWidth={3}
-                name="FG Store → Customer"
-              />
+              <Line type="monotone" dataKey="customerToStore" stroke="#2563eb" strokeWidth={3}
+                name="Customer → Store" />
+              <Line type="monotone" dataKey="storeToProduction" stroke="#16a34a" strokeWidth={3}
+                name="Store → Production" />
+              <Line type="monotone" dataKey="productionToFGStore" stroke="#9333ea" strokeWidth={3}
+                name="Production → FG Store" />
+              <Line type="monotone" dataKey="FGStoreToCustomer" stroke="#ea580c" strokeWidth={3}
+                name="FG Store → Customer" />
             </LineChart>
           </ResponsiveContainer>
         </motion.div>
       </div>
 
-{/* ------------------ TROLLEY ABNORMAL MOVEMENT ------------------ */}
-
-<div className="mt-10 pl-10 pr-4">
-  {/* Header */}
-  <motion.div
+      {/* Abnormal Summary */}
+      <div className="mt-10 pl-10 pr-4">
+        <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     className="text-lg font-semibold rounded-full bg-white text-gray-800 mb-4 p-4 outline justify-center text-center"
@@ -433,19 +365,20 @@ Also, for
    🚚 Trolley Abnormal Movement
   </motion.div>
 
+
   {/* Summary */}
   <div className="flex justify-center gap-10 mt-4">
     <div className="flex items-center gap-3">
       <span className="font-medium bg-blue-100 text-black px-4 py-1 rounded-md">Duplicate Movement</span>
       <span className="px-6 py-1 bg-blue-800 text-white rounded-md font-semibold">
-        {abnormalMovementSummary.duplicate}
+        {abnormalSummary.duplicate}
       </span>
     </div>
 
     <div className="flex items-center gap-3">
       <span className="font-medium bg-blue-100 text-black px-4 py-1 rounded-md">Wrong Movement</span>
       <span className="px-6 py-1 bg-blue-800 text-white rounded-md font-semibold">
-        {abnormalMovementSummary.wrong}
+        {abnormalSummary.wrong}
       </span>
     </div>
   </div>
@@ -458,7 +391,7 @@ Also, for
       <span>Movement Count</span>
     </div>
 
-    {abnormalMovementTable.map((row, index) => (
+    {/* {abnormalMovementTable.map((row, index) => (
       <motion.div
         key={index}
         whileHover={{ backgroundColor: "#f1f5f9" }}
@@ -468,20 +401,20 @@ Also, for
         <span className="text-black font-semibold">{row.destination}</span>
         <ProgressBar value={row.value} />
       </motion.div>
-    ))}
+    ))} */}
   </div>
 </div>
-
-<div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8 pl-10 pr-4 mb-10 ">
+      {/* Location Wise Charts */}
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8 pl-10 pr-4 mb-10 ">
   <VerticalBarCard
     title="Duplicate Movement – Location Wise"
-    data={duplicateLocationChart}
+    data={duplicateLocation}
     barColor="#5587f4ff"
   />
 
   <VerticalBarCard
     title="Wrong Movement – Location Wise"
-    data={wrongLocationChart}
+    data={wrongLocation}
     barColor="#051389ff"
   />
 </div>

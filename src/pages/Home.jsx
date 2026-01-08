@@ -294,7 +294,7 @@ const Home = () => {
 
       {/* ------------------ MOVEMENT + HOURLY TREND ------------------ */}
       <div className="mt-8 pl-10 pr-4 mb-8">
-        <h2 className="text-lg font-semibold rounded-full bg-white text-gray-800 mb-4 p-4 justify-center text-center">
+        <h2 className="text-lg font-semibold rounded-full bg-white outline text-gray-800 mb-4 p-4 justify-center text-center">
           🚚 Trolley Movement
         </h2>
 
@@ -428,7 +428,7 @@ Also, for
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="text-lg font-semibold rounded-full bg-white text-gray-800 mb-4 p-4 justify-center text-center"
+    className="text-lg font-semibold rounded-full bg-white text-gray-800 mb-4 p-4 outline justify-center text-center"
   >
    🚚 Trolley Abnormal Movement
   </motion.div>

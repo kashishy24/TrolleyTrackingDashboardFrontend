@@ -22,7 +22,7 @@ const TrolleyBreakdown = () => {
   const [chartData, setChartData] = useState([]);
   const [tableData, setTableData] = useState([]);
 
-
+const BASE = (import.meta.env.VITE_BACKEND_BASE_URL || "").replace(/\/+$/, "");
 
   // ---------------- API CALL ----------------
  // ---------------- API CALL ----------------
@@ -37,15 +37,15 @@ const applyFilter = async () => {
 
     // 🔥 CALL ALL THREE APIs IN PARALLEL
     const [chartRes, cardRes, detailsRes] = await Promise.all([
-      axios.post("http://localhost:3007/api/Breakdown/breakdownduration", {
+      axios.post(`${BASE}/Breakdown/breakdownduration`, {
         StartDate: rangeStart,
         EndDate: rangeEnd,
       }),
-      axios.post("http://localhost:3007/api/Breakdown/dashboard/bd-cards", {
+      axios.post(`${BASE}/Breakdown/dashboard/bd-cards`, {
         StartDate: rangeStart,
         EndDate: rangeEnd,
       }),
-      axios.post("http://localhost:3007/api/Breakdown/breakdown/details", {
+      axios.post(`${BASE}/Breakdown/breakdown/details`, {
         StartDate: rangeStart,
         EndDate: rangeEnd,
       }),

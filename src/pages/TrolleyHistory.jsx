@@ -45,8 +45,8 @@ const STATUS_COLORS = {
     Production: "bg-blue-100 text-blue-700",
     FGStore: "bg-indigo-100 text-indigo-700",
      Maintenance: "bg-yellow-100 text-yellow-700",
-     TrolleyOut: "bg-green-100 text-green-700",
-     TrolleyOut: "bg-green-100 text-green-700",
+     TrolleyOut1: "bg-green-100 text-green-700",
+     TrolleyOut2: "bg-green-100 text-green-700",
   },
 
   MOVEMENT_TYPE: {

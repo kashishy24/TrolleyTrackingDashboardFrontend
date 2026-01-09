@@ -20,7 +20,11 @@ import {
 } from "recharts";
 
 import { motion } from "framer-motion";
+import axios from "axios";
 
+const api = axios.create({
+  baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
+});
 /* ------------------ STAT CARD ------------------ */
 const StatCard = ({ title, items, icon: Icon }) => (
   <motion.div
@@ -46,6 +50,7 @@ const StatCard = ({ title, items, icon: Icon }) => (
   </motion.div>
 );
 
+
 /* ------------------ CHART CARD ------------------ */
 const ChartCard = ({ title, data, barColor }) => (
   <motion.div
@@ -70,6 +75,8 @@ const ChartCard = ({ title, data, barColor }) => (
   </motion.div>
 );
 
+
+
 // vertical bar chart
 const VerticalBarCard = ({ title, data, barColor }) => (
   <motion.div
@@ -87,8 +94,8 @@ const VerticalBarCard = ({ title, data, barColor }) => (
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-          <XAxis dataKey="name"  tick={{ fill: "#000", fontWeight: 300 }}/>
-          <YAxis allowDecimals={false}  tick={{ fill: "#000", fontWeight: 300 }} />
+          <XAxis dataKey="name" tick={{ fill: "#000", fontWeight: 300 }} />
+          <YAxis allowDecimals={false} tick={{ fill: "#000", fontWeight: 300 }} />
           <Tooltip />
 
           <Bar
@@ -118,46 +125,65 @@ const Home = () => {
   const [wrongLocation, setWrongLocation] = useState([]);
 
   /* ------------------ API CALLS ------------------ */
-  useEffect(() => {
-    fetch("http://192.168.1.13:3007/api/Home/TrolleyLiveStatus")
-      .then(res => res.json())
-      .then(res => setLiveStatus(res.data));
+ useEffect(() => {
+  const loadDashboard = async () => {
+    try {
+      /* ---------- LIVE STATUS ---------- */
+      const liveRes = await api.get("/Home/TrolleyLiveStatus");
+      setLiveStatus(liveRes.data.data);
 
-    fetch("http://192.168.1.13:3007/api/Home/TrolleyLocationHourlySummary")
-      .then(res => res.json())
-      .then(res => {
-        const customer = res.data.find(x => x.locationName === "Customer");
-        if (customer) {
-          setHourlyTrend(
-            customer.hourly.map(h => ({
-              hour: h.hour,
-              customerToStore: h.value,
-              storeToProduction: h.value,
-              productionToFGStore: h.value,
-              FGStoreToCustomer: h.value,
-            }))
-          );
-        }
+      /* ---------- HOURLY LOCATION SUMMARY ---------- */
+      const hourlyRes = await api.get("/Home/TrolleyLocationHourlySummary");
+
+      const byLocation = {};
+      hourlyRes.data.data.forEach(loc => {
+        byLocation[loc.locationName] = loc.hourly;
       });
 
-    fetch("http://192.168.1.13:3007/api/Home/TrolleyTotalDuplicateWrongMovement")
-      .then(res => res.json())
-      .then(res => setAbnormalSummary({
-        duplicate: res.data.DuplicateMovement,
-        wrong: res.data.WrongMovement
+      const hours = byLocation["Customer"]?.map(h => h.hour) || [];
+
+      const merged = hours.map((hour, idx) => ({
+        hour,
+        customerToEmptyStore: byLocation["Empty"]?.[idx]?.value || 0,
+        EmptystoreToProduction: byLocation["Production"]?.[idx]?.value || 0,
+        productionToFGStore: byLocation["FG Store"]?.[idx]?.value || 0,
+        FGStoreToCustomer: byLocation["Customer"]?.[idx]?.value || 0,
       }));
 
-    fetch("http://192.168.1.13:3007/api/Home/TrolleyDupWrongMovementLocationWise")
-      .then(res => res.json())
-      .then(res => {
-        setDuplicateLocation(
-          res.data.duplicate.map(d => ({ name: d.LocationName, value: d.DuplicateCount }))
-        );
-        setWrongLocation(
-          res.data.wrong.map(w => ({ name: w.LocationName, value: w.WrongCount }))
-        );
+      setHourlyTrend(merged);
+
+      /* ---------- DUP / WRONG SUMMARY ---------- */
+      const abnormalRes = await api.get("/Home/TrolleyTotalDuplicateWrongMovement");
+      setAbnormalSummary({
+        duplicate: abnormalRes.data.data.DuplicateMovement,
+        wrong: abnormalRes.data.data.WrongMovement,
       });
-  }, []);
+
+      /* ---------- DUP / WRONG LOCATION WISE ---------- */
+      const locWiseRes = await api.get("/Home/TrolleyDupWrongMovementLocationWise");
+
+      setDuplicateLocation(
+        locWiseRes.data.data.duplicate.map(d => ({
+          name: d.LocationName,
+          value: d.DuplicateCount,
+        }))
+      );
+
+      setWrongLocation(
+        locWiseRes.data.data.wrong.map(w => ({
+          name: w.LocationName,
+          value: w.WrongCount,
+        }))
+      );
+
+    } catch (error) {
+      console.error("Dashboard API error:", error);
+    }
+  };
+
+  loadDashboard();
+}, []);
+
 
   if (!liveStatus) return null;
 
@@ -237,24 +263,7 @@ const Home = () => {
       {/* EVERYTHING BELOW REMAINS EXACTLY SAME */}
       {/* Movement, abnormal movement, hourly charts can be connected later */}
 
-      {/* Hourly Trend */}
-      {/* <div className="mt-8 pl-10 pr-4">
-        <h2 className="text-lg font-semibold text-center bg-white rounded-full p-3">
-          🚚 Hourly Movement Trend
-        </h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={hourlyTrend}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="hour" />
-            <YAxis />
-            <Tooltip />
-            <Line  type="monotone" dataKey="customerToStore" stroke="#2563eb" />
-            <Line type="monotone" dataKey="storeToProduction" stroke="#16a34a"/>
-            <Line  type="monotone" dataKey="productionToFGStore" stroke="#9333ea" />
-            <Line type="monotone"  dataKey="FGStoreToCustomer" stroke="#ea580c" />
-          </LineChart>
-        </ResponsiveContainer>
-      </div> */}
+
 
       <div className="mt-8 pl-10 pr-4 mb-8">
         <h2 className="text-lg font-semibold rounded-full bg-white outline text-gray-800 mb-4 p-4 justify-center text-center">
@@ -273,7 +282,7 @@ const Home = () => {
             </div>
             <div>
               <p className="text-sm text-black">Customer → Empty Store</p>
-              <p className="text-2xl font-semibold text-gray-800">2900</p>
+              <p className="text-2xl font-semibold text-gray-800"> {liveStatus.locationStatus.Empty}</p>
             </div>
           </motion.div>
 
@@ -287,7 +296,7 @@ const Home = () => {
             </div>
             <div>
               <p className="text-sm text-black">Empty Store → Production</p>
-              <p className="text-2xl font-semibold text-gray-800">2900</p>
+              <p className="text-2xl font-semibold text-gray-800">{liveStatus.locationStatus.Production}</p>
             </div>
           </motion.div>
 
@@ -301,7 +310,7 @@ const Home = () => {
             </div>
             <div>
               <p className="text-sm text-black">Production → FG Store</p>
-              <p className="text-2xl font-semibold text-gray-800">2900</p>
+              <p className="text-2xl font-semibold text-gray-800">{liveStatus.locationStatus.FGStore}</p>
             </div>
           </motion.div>
 
@@ -314,8 +323,8 @@ const Home = () => {
               🏭
             </div>
             <div>
-              <p className="text-m text-black">FG Store → IN Transt</p>
-              <p className="text-2xl font-semibold text-gray-800">2</p>
+              <p className="text-m text-black">FG Store → Customer</p>
+              <p className="text-2xl font-semibold text-gray-800">{liveStatus.locationStatus.Customer}</p>
             </div>
           </motion.div>
         </div>
@@ -342,10 +351,10 @@ const Home = () => {
               <YAxis domain={['dataMin - 5', 'dataMax + 5']} // optional, tighten Y-axis
                 tick={{ fill: "#000", fontWeight: 300 }} />
               <Tooltip />
-              <Line type="monotone" dataKey="customerToStore" stroke="#2563eb" strokeWidth={3}
-                name="Customer → Store" />
-              <Line type="monotone" dataKey="storeToProduction" stroke="#16a34a" strokeWidth={3}
-                name="Store → Production" />
+              <Line type="monotone" dataKey="customerToEmptyStore" stroke="#2563eb" strokeWidth={3}
+                name="Customer → Empty Store" />
+              <Line type="monotone" dataKey="EmptystoreToProduction" stroke="#16a34a" strokeWidth={3}
+                name="Empty Store → Production" />
               <Line type="monotone" dataKey="productionToFGStore" stroke="#9333ea" strokeWidth={3}
                 name="Production → FG Store" />
               <Line type="monotone" dataKey="FGStoreToCustomer" stroke="#ea580c" strokeWidth={3}
@@ -358,40 +367,40 @@ const Home = () => {
       {/* Abnormal Summary */}
       <div className="mt-10 pl-10 pr-4">
         <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="text-lg font-semibold rounded-full bg-white text-gray-800 mb-4 p-4 outline justify-center text-center"
-  >
-   🚚 Trolley Abnormal Movement
-  </motion.div>
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-lg font-semibold rounded-full bg-white text-gray-800 mb-4 p-4 outline justify-center text-center"
+        >
+          🚚 Trolley Abnormal Movement
+        </motion.div>
 
 
-  {/* Summary */}
-  <div className="flex justify-center gap-10 mt-4">
-    <div className="flex items-center gap-3">
-      <span className="font-medium bg-blue-100 text-black px-4 py-1 rounded-md">Duplicate Movement</span>
-      <span className="px-6 py-1 bg-blue-800 text-white rounded-md font-semibold">
-        {abnormalSummary.duplicate}
-      </span>
-    </div>
+        {/* Summary */}
+        <div className="flex justify-center gap-10 mt-4">
+          <div className="flex items-center gap-3">
+            <span className="font-medium bg-blue-100 text-black px-4 py-1 rounded-md">Duplicate Movement</span>
+            <span className="px-6 py-1 bg-blue-800 text-white rounded-md font-semibold">
+              {abnormalSummary.duplicate}
+            </span>
+          </div>
 
-    <div className="flex items-center gap-3">
-      <span className="font-medium bg-blue-100 text-black px-4 py-1 rounded-md">Wrong Movement</span>
-      <span className="px-6 py-1 bg-blue-800 text-white rounded-md font-semibold">
-        {abnormalSummary.wrong}
-      </span>
-    </div>
-  </div>
+          <div className="flex items-center gap-3">
+            <span className="font-medium bg-blue-100 text-black px-4 py-1 rounded-md">Wrong Movement</span>
+            <span className="px-6 py-1 bg-blue-800 text-white rounded-md font-semibold">
+              {abnormalSummary.wrong}
+            </span>
+          </div>
+        </div>
 
-  {/* TABLE */}
-  <div className="mt-6 bg-white rounded-xl shadow-md overflow-hidden">
-    <div className="grid grid-cols-3 bg-blue-100 text-black font-bold p-3">
-      <span>Source</span>
-      <span>Destination</span>
-      <span>Movement Count</span>
-    </div>
+        {/* TABLE */}
+        <div className="mt-6 bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="grid grid-cols-3 bg-blue-100 text-black font-bold p-3">
+            <span>Source</span>
+            <span>Destination</span>
+            <span>Movement Count</span>
+          </div>
 
-    {/* {abnormalMovementTable.map((row, index) => (
+          {/* {abnormalMovementTable.map((row, index) => (
       <motion.div
         key={index}
         whileHover={{ backgroundColor: "#f1f5f9" }}
@@ -402,22 +411,22 @@ const Home = () => {
         <ProgressBar value={row.value} />
       </motion.div>
     ))} */}
-  </div>
-</div>
+        </div>
+      </div>
       {/* Location Wise Charts */}
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8 pl-10 pr-4 mb-10 ">
-  <VerticalBarCard
-    title="Duplicate Movement – Location Wise"
-    data={duplicateLocation}
-    barColor="#5587f4ff"
-  />
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8 pl-10 pr-4 mb-10 ">
+        <VerticalBarCard
+          title="Duplicate Movement – Location Wise"
+          data={duplicateLocation}
+          barColor="#5587f4ff"
+        />
 
-  <VerticalBarCard
-    title="Wrong Movement – Location Wise"
-    data={wrongLocation}
-    barColor="#051389ff"
-  />
-</div>
+        <VerticalBarCard
+          title="Wrong Movement – Location Wise"
+          data={wrongLocation}
+          barColor="#051389ff"
+        />
+      </div>
 
     </DashboardLayout>
   );

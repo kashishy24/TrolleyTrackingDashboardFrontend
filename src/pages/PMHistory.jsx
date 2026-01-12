@@ -47,6 +47,8 @@ const PMHistory = () => {
   const [tableData, setTableData] = useState([]);
 const [loadingTable, setLoadingTable] = useState(false);
 
+
+const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
   /* ---------- KPI STATE ---------- */
   const [kpiData, setKpiData] = useState({
     avg: 0,
@@ -66,7 +68,7 @@ const [loadingTable, setLoadingTable] = useState(false);
     const fetchPMCards = async () => {
       try {
         const res = await axios.post(
-          "http://localhost:3007/api/PMHistory/dashboard/pm-cards",
+          `${BASE_URL}/PMHistory/dashboard/pm-cards`,
           { StartDate: startDate, EndDate: endDate }
         );
 
@@ -97,7 +99,7 @@ const [loadingTable, setLoadingTable] = useState(false);
       setLoadingTrend(true);
       try {
         const res = await axios.post(
-          "http://localhost:3007/api/PMHistory/dashboard/pm-plan-actual",
+          `${BASE_URL}/PMHistory/dashboard/pm-plan-actual`,
           { StartDate: startDate, EndDate: endDate }
         );
 
@@ -127,7 +129,7 @@ const [loadingTable, setLoadingTable] = useState(false);
     setLoadingTable(true);
     try {
       const res = await axios.post(
-        "http://localhost:3007/api/PMHistory/dashboard/pm-history-table",
+        `${BASE_URL}/PMHistory/dashboard/pm-history-table`,
         {
           StartDate: startDate,
           EndDate: endDate,

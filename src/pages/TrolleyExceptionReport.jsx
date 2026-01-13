@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import axios from "axios";
 import DashboardLayout from "../partials/DashboardLayout";
 import { motion } from "framer-motion";
 import {
@@ -11,64 +12,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-/* ------------------ DUMMY DATA ------------------ */
-const exceptionHistory = [
-  {
-    trolleyId: "TR-101",
-    source: "Production",
-    destination: "Empty",
-    type: "Duplicate",
-    count: 2,
-    date: "2026-01-10",
-  },
-  {
-    trolleyId: "TR-102",
-    source: "FG Store",
-    destination: "Production",
-    type: "Wrong",
-    count: 5,
-    date: "2026-01-11",
-  },
-  {
-    trolleyId: "TR-103",
-    source: "Customer",
-    destination: "FG Store",
-    type: "Duplicate",
-    count: 3,
-    date: "2026-01-12",
-  },
-];
-
-const rawData = [
-  {
-    trolleyId: "TR-101",
-    source: "Production",
-    destination: "FG Store",
-    type: "Duplicate",
-      count: 3,
-    moveType: "Auto",
-    date: "2025-01-05",
-  },
-  {
-    trolleyId: "TR-102",
-    source: "FG Store",
-    destination: "Production",
-    type: "Wrong",
-    count: 5,
-    moveType: "Manual",
-    date: "2025-01-07",
-  },
-  {
-    trolleyId: "TR-103",
-    source: "Warehouse",
-    destination: "Production",
-    type: "Duplicate",
-    count: 2,
-    moveType: "Manual",
-    date: "2025-01-10",
-  },
-];
-
 /* ------------------ COMPONENT ------------------ */
 const TrolleyExceptionReport = () => {
   const [statusFilter, setStatusFilter] = useState("");
@@ -77,59 +20,154 @@ const [startDate, setStartDate] = useState("");
 const [endDate, setEndDate] = useState("");
 const [sortOrder, setSortOrder] = useState("desc");
 
-  /* -------- FILTER DATA BASED ON DATE -------- */
- const filteredData = useMemo(() => {
-  let data = [...rawData];
+const BASE = (import.meta.env.VITE_BACKEND_BASE_URL || "").replace(/\/+$/, "");
 
-  if (statusFilter) {
-    data = data.filter(row => row.type === statusFilter);
-  }
+ /* -------- Table api -------- */
+const [apiData, setApiData] = useState([]);
+const [loading, setLoading] = useState(false);
+/* -------- SUMMARY COUNTS -------- */
+const [summary, setSummary] = useState({
+  duplicate: 0,
+  wrong: 0,
+});
 
-  if (moveTypeFilter) {
-    data = data.filter(row => row.moveType === moveTypeFilter);
-  }
+/* -------- SOURCE → DEST TABLE -------- */
+const [sourceDestData, setSourceDestData] = useState([]);
 
-  if (startDate) {
-    data = data.filter(row => row.date >= startDate);
-  }
+/* -------- LOCATION WISE CHARTS -------- */
+const [duplicateLocationChart, setDuplicateLocationChart] = useState([]);
+const [wrongLocationChart, setWrongLocationChart] = useState([]);
+ // Dynamic filter options
+  const [statusOptions, setStatusOptions] = useState([]);
+  const [moveTypeOptions, setMoveTypeOptions] = useState([]);
 
-  if (endDate) {
-    data = data.filter(row => row.date <= endDate);
-  }
+const filteredData = useMemo(() => {
+    let data = [...apiData];
 
-  data.sort((a, b) =>
-    sortOrder === "asc"
-      ? new Date(a.date) - new Date(b.date)
-      : new Date(b.date) - new Date(a.date)
-  );
+    if (statusFilter) {
+      data = data.filter((row) => row.MovementStatus === statusFilter);
+    }
 
-  return data;
-}, [statusFilter, moveTypeFilter, startDate, endDate, sortOrder]);
+    if (moveTypeFilter) {
+      data = data.filter((row) => row.MovementType === moveTypeFilter);
+    }
+
+    data.sort((a, b) =>
+      sortOrder === "asc"
+        ? new Date(a.date) - new Date(b.date)
+        : new Date(b.date) - new Date(a.date)
+    );
+
+    return data;
+  }, [apiData, statusFilter, moveTypeFilter, sortOrder]);
 
 
-  /* -------- SUMMARY -------- */
-  const duplicateCount = filteredData
-    .filter((d) => d.type === "Duplicate")
-    .reduce((a, b) => a + b.count, 0);
 
-  const wrongCount = filteredData
-    .filter((d) => d.type === "Wrong")
-    .reduce((a, b) => a + b.count, 0);
+ useEffect(() => {
+    if (!startDate || !endDate) return;
 
-  /* -------- LOCATION WISE CHART DATA -------- */
-  const duplicateLocationChart = [
-    { name: "Empty", value: 2 },
-    { name: "Production", value: 4 },
-    { name: "FG Store", value: 2 },
-    { name: "Customer", value: 3 },
-  ];
+    const fetchExceptionHistory = async () => {
+      try {
+        setLoading(true);
 
-  const wrongLocationChart = [
-    { name: "Empty", value: 2 },
-    { name: "Production", value: 4 },
-    { name: "FG Store", value: 2 },
-    { name: "Customer", value: 3 },
-  ];
+        const response = await axios.post(
+          `${BASE}/TrolleyExpectionReport/error-movement-history`,
+          { StartDate: startDate, EndDate: endDate }
+        );
+
+        const apiResult = response?.data?.data || [];
+
+        const mappedData = apiResult.map((item) => ({
+          trolleyId: item.TrolleyID,
+          source: item.SourceLocation,
+          destination: item.DestinationLocation,
+          MovementType: item.MovementType,
+          MovementStatus: item.MovementStatus,
+          date: new Date(item.MovementDate).toISOString().split("T")[0],
+        }));
+
+        setApiData(mappedData);
+
+        // Set filter options dynamically
+        setStatusOptions([...new Set(mappedData.map((d) => d.MovementStatus))]);
+        setMoveTypeOptions([...new Set(mappedData.map((d) => d.MovementType))]);
+      } catch (error) {
+        console.error("API Error:", error);
+        setApiData([]);
+        setStatusOptions([]);
+        setMoveTypeOptions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExceptionHistory();
+  }, [startDate, endDate]);
+
+useEffect(() => {
+  if (!startDate || !endDate) return;
+
+  const params = {
+    startDate,
+    endDate,
+  };
+
+  /* ---------- 1. TOTAL DUPLICATE / WRONG ---------- */
+  axios
+    .get(`${BASE}/TrolleyExpectionReport/TrolleyTotalDuplicateWrongMovement`, {
+      params,
+    })
+    .then((res) => {
+      const d = res?.data?.data || {};
+      setSummary({
+        duplicate: d.duplicateMovement || 0,
+        wrong: d.wrongMovement || 0,
+      });
+    })
+    .catch(() => {
+      setSummary({ duplicate: 0, wrong: 0 });
+    });
+
+  /* ---------- 2. SOURCE → DESTINATION ---------- */
+  axios
+    .get(`${BASE}/TrolleyExpectionReport/wrong-duplicate-movement`, {
+      params,
+    })
+    .then((res) => {
+      setSourceDestData(res?.data?.data || []);
+    })
+    .catch(() => {
+      setSourceDestData([]);
+    });
+
+  /* ---------- 3. LOCATION WISE ---------- */
+  axios
+    .get(`${BASE}/TrolleyExpectionReport/TrolleyDuplicateWrongMovement`, {
+      params,
+    })
+    .then((res) => {
+      const data = res?.data?.data || {};
+
+      setDuplicateLocationChart(
+        (data.duplicateMovement || []).map((d) => ({
+          name: d.LocationName,
+          value: d.DuplicateCount,
+        }))
+      );
+
+      setWrongLocationChart(
+        (data.wrongMovement || []).map((d) => ({
+          name: d.LocationName,
+          value: d.WrongCount,
+        }))
+      );
+    })
+    .catch(() => {
+      setDuplicateLocationChart([]);
+      setWrongLocationChart([]);
+    });
+}, [startDate, endDate]);
+
 
   return (
     <DashboardLayout>
@@ -176,8 +214,8 @@ const [sortOrder, setSortOrder] = useState("desc");
               Total Duplicate Movement
             </span>
             <span className="bg-blue-700 text-white px-6 py-1 rounded font-bold">
-              {duplicateCount}
-            </span>
+  {summary.duplicate}
+</span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -185,8 +223,8 @@ const [sortOrder, setSortOrder] = useState("desc");
               Total Wrong Movement
             </span>
             <span className="bg-blue-700 text-white px-6 py-1 rounded font-bold">
-              {wrongCount}
-            </span>
+  {summary.wrong}
+</span>
           </div>
         </div>
 
@@ -198,72 +236,81 @@ const [sortOrder, setSortOrder] = useState("desc");
             <span>Movement Count</span>
           </div>
 
-          {filteredData.map((row, index) => (
-            <motion.div
-              key={index}
-              whileHover={{ backgroundColor: "#f1f5f9" }}
-              className="grid grid-cols-3 p-3 border-b"
-            >
-              <span className="font-semibold">{row.source}</span>
-              <span className="font-semibold">{row.destination}</span>
-              <div className="w-full bg-gray-200 rounded h-5">
-                <div
-                  className="h-5 bg-blue-600 rounded text-xs text-white text-right pr-2"
-                  style={{ width: `${row.count * 15}%` }}
-                >
-                  {row.count}
-                </div>
-              </div>
-            </motion.div>
-          ))}
+          {sourceDestData.map((row, index) => (
+  <motion.div
+    key={index}
+    whileHover={{ backgroundColor: "#f1f5f9" }}
+    className="grid grid-cols-3 p-3 border-b"
+  >
+    <span className="font-semibold">{row.Source}</span>
+    <span className="font-semibold">{row.Destination}</span>
+
+    <div className="w-full bg-gray-200 rounded h-5">
+      <div
+        className="h-5 bg-blue-600 rounded text-xs text-white text-right pr-2"
+        style={{ width: `${row.MovementCount * 15}%` }}
+      >
+        {row.MovementCount}
+      </div>
+    </div>
+  </motion.div>
+))}
         </div>
 
         {/* ---------- LOCATION WISE BAR CHART ---------- */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+         <ChartCard
+  title="Duplicate Movement – Location Wise"
+  data={duplicateLocationChart}
+/>
           <ChartCard
-            title="Duplicate Movement – Location Wise"
-            data={duplicateLocationChart}
-          />
-          <ChartCard
-            title="Wrong Movement – Location Wise"
-            data={wrongLocationChart}
-          />
+  title="Wrong Movement – Location Wise"
+  data={wrongLocationChart}
+/>
         </div>
 <div className="flex justify-end w-full">
   <div className="flex items-center gap-4  bg-white p-2 rounded-xl shadow-md w-full justify-end border  ml-auto ">
  <h2 className="font-bold text-black p-4 flex-grow">Error Movement History Table  </h2>
+
+ 
     {/* Status Filter */}
     <select
-      className="border rounded-lg px-8 py-2 justify-end bg-white-100"
-      value={statusFilter}
-      onChange={(e) => setStatusFilter(e.target.value)}
-    >
-      <option value="">All Status</option>
-      <option value="Duplicate">Duplicate</option>
-      <option value="Wrong">Wrong</option>
-    </select>
+              className="border rounded-lg px-8 py-2"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="">All Status</option>
+              {statusOptions.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
 
     {/* Move Type Filter */}
     <select
-      className="border rounded-lg px-10 py-2 justify-end bg-white-100"
-      value={moveTypeFilter}
-      onChange={(e) => setMoveTypeFilter(e.target.value)}
-    >
-      <option value="">All Move Types</option>
-      <option value="Auto">Auto</option>
-      <option value="Manual">Manual</option>
-    </select>
+              className="border rounded-lg px-8 py-2"
+              value={moveTypeFilter}
+              onChange={(e) => setMoveTypeFilter(e.target.value)}
+            >
+              <option value="">All Move Types</option>
+              {moveTypeOptions.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
 
 
     {/* Sort */}
-    <select
-      className="border rounded-lg px-10 py-2 justify-end bg-white-100"
-      value={sortOrder}
-      onChange={(e) => setSortOrder(e.target.value)}
-    >
-      <option value="desc">Latest First</option>
-      <option value="asc">Oldest First</option>
-    </select>
+     <select
+              className="border rounded-lg px-8 py-2"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="desc">Latest First</option>
+              <option value="asc">Oldest First</option>
+            </select>
 
   </div>
 </div>
@@ -276,21 +323,37 @@ const [sortOrder, setSortOrder] = useState("desc");
                 <th className="p-2">Trolley ID</th>
                 <th className="p-2">Source</th>
                 <th className="p-2">Destination</th>
+                <th className="p-2">Movement Status</th>
                 <th className="p-2">Movement Type</th>
                 <th className="p-2">Date</th>
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((row, i) => (
-                <tr key={i} className="border-b hover:bg-gray-100">
-                  <td className="p-2 text-center">{row.trolleyId}</td>
-                  <td className="p-2 text-center">{row.source}</td>
-                  <td className="p-2 text-center">{row.destination}</td>
-                  <td className="p-2 text-center">{row.type}</td>
-                  <td className="p-2 text-center">{row.date}</td>
-                </tr>
-              ))}
-            </tbody>
+  {loading ? (
+    <tr>
+      <td colSpan="5" className="p-4 text-center font-semibold">
+        Loading data...
+      </td>
+    </tr>
+  ) : filteredData.length === 0 ? (
+    <tr>
+      <td colSpan="5" className="p-4 text-center font-semibold">
+        No records found
+      </td>
+    </tr>
+  ) : (
+    filteredData.map((row, i) => (
+      <tr key={i} className="border-b hover:bg-gray-100">
+        <td className="p-2 text-center">{row.trolleyId}</td>
+        <td className="p-2 text-center">{row.source}</td>
+        <td className="p-2 text-center">{row.destination}</td>
+         <td className="p-2 text-center">{row.MovementStatus}</td>
+        <td className="p-2 text-center">{row.MovementType}</td>
+        <td className="p-2 text-center">{row.date}</td>
+      </tr>
+    ))
+  )}
+</tbody>
           </table>
         </div>
 

@@ -229,8 +229,8 @@ useEffect(() => {
         </div>
 
         {/* ---------- SOURCE → DESTINATION TABLE ---------- */}
-        <div className="bg-white rounded-xl shadow-md overflow-hidden ">
-          <div className="grid grid-cols-3 bg-blue-100 font-bold p-3">
+        <div className="max-h-[350px] bg-white rounded-xl shadow-md overflow-y-auto ">
+          <div className="grid grid-cols-3 bg-blue-100 font-bold p-3 sticky top-0 z-10">
             <span>Source</span>
             <span>Destination</span>
             <span>Movement Count</span>
@@ -316,9 +316,9 @@ useEffect(() => {
 </div>
 
         {/* ---------- HISTORY TABLE ---------- */}
-        <div className="bg-white rounded-xl shadow-md p-4">
-          <table className="w-full text-sm">
-            <thead className="bg-blue-600 text-white">
+        <div className="bg-white rounded-xl shadow-md  max-h-[350px] overflow-y-auto">
+          <table className="w-full text-sm ">
+            <thead className="bg-blue-600 text-white sticky top-0 z-0">
               <tr>
                 <th className="p-2">Trolley ID</th>
                 <th className="p-2">Source</th>

@@ -258,7 +258,7 @@ setTodayAbnormalMovements(todayAbnormalRes.data.data || []);
           { label: "FG Store", value: liveStatus.locationStatus.FGStore },
           { label: "Production", value: liveStatus.locationStatus.Production },
           { label: "Customer", value: liveStatus.locationStatus.Customer },
-          { label: "Maintenance", value: liveStatus.locationStatus.Maintenance },
+          { label: "Maintenance4", value: liveStatus.locationStatus.Maintenance },
         ]}
           className="bg-white rounded-xl shadow-md p-4 hover:shadow-xl text-black"
         />
@@ -270,7 +270,17 @@ setTodayAbnormalMovements(todayAbnormalRes.data.data || []);
           { label: "Scrap", value: liveStatus.locationStatus.Scrap },
         ]} />
 
-        <StatCard title="By PM Status" icon={MdBuild} items={pmStatusData} />
+          
+
+        <StatCard title="By PM Status" icon={MdBuild} items={[
+          { label: "Normal", value: liveStatus.locationStatus.PM_Normal },
+          { label: "Alert", value: liveStatus.locationStatus.PM_Alert },
+          { label: "Warning", value: liveStatus.locationStatus.PM_Warning },
+          { label: "Alarm", value: liveStatus.locationStatus.PM_Alarm },
+          { label: "Execution", value: liveStatus.locationStatus.PM_Execution },
+          { label: "Completed", value: liveStatus.pmCompletedToday },
+        ]} /> 
+
 
         <StatCard title="Trolley Breakdown" icon={MdWarning} items={[
           { label: "Total Breakdown", value: liveStatus.breakdown.TotalBreakdown },

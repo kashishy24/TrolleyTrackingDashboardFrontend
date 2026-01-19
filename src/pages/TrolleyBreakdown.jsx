@@ -129,7 +129,7 @@ const applyFilter = async () => {
 
         {/* ---------------- SUMMARY CARDS ---------------- */}
         {bdCards && (
-          <div className="grid grid-cols-4 gap-3 mb-6">
+          <div className="grid grid-cols-5 gap-3 mb-6">
             <div className="bg-white shadow rounded-xl p-4 text-center">
               <h3 className="font-semibold text-black">
                 Total Breakdown Duration
@@ -155,7 +155,12 @@ const applyFilter = async () => {
                 {bdCards.MaxBD_Duration} hrs
               </p>
             </div>
-
+<div className="bg-white shadow rounded-xl p-4 text-center">
+              <h3 className="font-semibold text-black">
+               Average Breakdown Duration
+              </h3>
+              <p className="mt-2 text-black">{bdCards.AvgBD} hrs</p>
+            </div>
             <div className="bg-white shadow rounded-xl p-4 text-center">
               <h3 className="font-semibold text-black">
                 Minimum Breakdown

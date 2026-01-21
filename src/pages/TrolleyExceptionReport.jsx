@@ -15,33 +15,33 @@ import {
 /* ------------------ COMPONENT ------------------ */
 const TrolleyExceptionReport = () => {
   const [statusFilter, setStatusFilter] = useState("");
-const [moveTypeFilter, setMoveTypeFilter] = useState("");
-const [startDate, setStartDate] = useState("");
-const [endDate, setEndDate] = useState("");
-const [sortOrder, setSortOrder] = useState("desc");
+  const [moveTypeFilter, setMoveTypeFilter] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [sortOrder, setSortOrder] = useState("desc");
 
-const BASE = (import.meta.env.VITE_BACKEND_BASE_URL || "").replace(/\/+$/, "");
+  const BASE = (import.meta.env.VITE_BACKEND_BASE_URL || "").replace(/\/+$/, "");
 
- /* -------- Table api -------- */
-const [apiData, setApiData] = useState([]);
-const [loading, setLoading] = useState(false);
-/* -------- SUMMARY COUNTS -------- */
-const [summary, setSummary] = useState({
-  duplicate: 0,
-  wrong: 0,
-});
+  /* -------- Table api -------- */
+  const [apiData, setApiData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  /* -------- SUMMARY COUNTS -------- */
+  const [summary, setSummary] = useState({
+    duplicate: 0,
+    wrong: 0,
+  });
 
-/* -------- SOURCE → DEST TABLE -------- */
-const [sourceDestData, setSourceDestData] = useState([]);
+  /* -------- SOURCE → DEST TABLE -------- */
+  const [sourceDestData, setSourceDestData] = useState([]);
 
-/* -------- LOCATION WISE CHARTS -------- */
-const [duplicateLocationChart, setDuplicateLocationChart] = useState([]);
-const [wrongLocationChart, setWrongLocationChart] = useState([]);
- // Dynamic filter options
+  /* -------- LOCATION WISE CHARTS -------- */
+  const [duplicateLocationChart, setDuplicateLocationChart] = useState([]);
+  const [wrongLocationChart, setWrongLocationChart] = useState([]);
+  // Dynamic filter options
   const [statusOptions, setStatusOptions] = useState([]);
   const [moveTypeOptions, setMoveTypeOptions] = useState([]);
 
-const filteredData = useMemo(() => {
+  const filteredData = useMemo(() => {
     let data = [...apiData];
 
     if (statusFilter) {
@@ -63,7 +63,7 @@ const filteredData = useMemo(() => {
 
 
 
- useEffect(() => {
+  useEffect(() => {
     if (!startDate || !endDate) return;
 
     const fetchExceptionHistory = async () => {
@@ -104,69 +104,69 @@ const filteredData = useMemo(() => {
     fetchExceptionHistory();
   }, [startDate, endDate]);
 
-useEffect(() => {
-  if (!startDate || !endDate) return;
+  useEffect(() => {
+    if (!startDate || !endDate) return;
 
-  const params = {
-    startDate,
-    endDate,
-  };
+    const params = {
+      startDate,
+      endDate,
+    };
 
-  /* ---------- 1. TOTAL DUPLICATE / WRONG ---------- */
-  axios
-    .get(`${BASE}/TrolleyExpectionReport/TrolleyTotalDuplicateWrongMovement`, {
-      params,
-    })
-    .then((res) => {
-      const d = res?.data?.data || {};
-      setSummary({
-        duplicate: d.duplicateMovement || 0,
-        wrong: d.wrongMovement || 0,
+    /* ---------- 1. TOTAL DUPLICATE / WRONG ---------- */
+    axios
+      .get(`${BASE}/TrolleyExpectionReport/TrolleyTotalDuplicateWrongMovement`, {
+        params,
+      })
+      .then((res) => {
+        const d = res?.data?.data || {};
+        setSummary({
+          duplicate: d.duplicateMovement || 0,
+          wrong: d.wrongMovement || 0,
+        });
+      })
+      .catch(() => {
+        setSummary({ duplicate: 0, wrong: 0 });
       });
-    })
-    .catch(() => {
-      setSummary({ duplicate: 0, wrong: 0 });
-    });
 
-  /* ---------- 2. SOURCE → DESTINATION ---------- */
-  axios
-    .get(`${BASE}/TrolleyExpectionReport/wrong-duplicate-movement`, {
-      params,
-    })
-    .then((res) => {
-      setSourceDestData(res?.data?.data || []);
-    })
-    .catch(() => {
-      setSourceDestData([]);
-    });
+    /* ---------- 2. SOURCE → DESTINATION ---------- */
+    axios
+      .get(`${BASE}/TrolleyExpectionReport/wrong-duplicate-movement`, {
+        params,
+      })
+      .then((res) => {
+        setSourceDestData(res?.data?.data || []);
+      })
+      .catch(() => {
+        setSourceDestData([]);
+      });
 
-  /* ---------- 3. LOCATION WISE ---------- */
-  axios
-    .get(`${BASE}/TrolleyExpectionReport/TrolleyDuplicateWrongMovement`, {
-      params,
-    })
-    .then((res) => {
-      const data = res?.data?.data || {};
+    /* ---------- 3. LOCATION WISE ---------- */
+    axios
+      .get(`${BASE}/TrolleyExpectionReport/TrolleyDuplicateWrongMovement`, {
+        params,
+      })
+      .then((res) => {
+        const data = res?.data?.data || {};
 
-      setDuplicateLocationChart(
-        (data.duplicateMovement || []).map((d) => ({
-          name: d.LocationName,
-          value: d.DuplicateCount,
-        }))
-      );
+        setDuplicateLocationChart(
+          (data.duplicateMovement || []).map((d) => ({
+            name: d.LocationName,
+            value: d.DuplicateCount,
+          }))
+        );
 
-      setWrongLocationChart(
-        (data.wrongMovement || []).map((d) => ({
-          name: d.LocationName,
-          value: d.WrongCount,
-        }))
-      );
-    })
-    .catch(() => {
-      setDuplicateLocationChart([]);
-      setWrongLocationChart([]);
-    });
-}, [startDate, endDate]);
+        setWrongLocationChart(
+          (data.wrongMovement || []).map((d) => ({
+            name: d.LocationName,
+            value: d.WrongCount,
+          }))
+        );
+      })
+      .catch(() => {
+        setDuplicateLocationChart([]);
+        setWrongLocationChart([]);
+      });
+  }, [startDate, endDate]);
 
 
   return (
@@ -180,7 +180,7 @@ useEffect(() => {
           className="bg-white rounded-xl shadow-md p-4 flex justify-between items-center border"
         >
           <h1 className="text-lg font-semibold">
-             Error Movement  Summary
+            Error Movement  Summary
           </h1>
 
           {/* Date Filter */}
@@ -214,8 +214,8 @@ useEffect(() => {
               Total Duplicate Movement
             </span>
             <span className="bg-blue-700 text-white px-6 py-1 rounded font-bold">
-  {summary.duplicate}
-</span>
+              {summary.duplicate}
+            </span>
           </div>
 
           <div className="flex items-center gap-3">
@@ -223,8 +223,8 @@ useEffect(() => {
               Total Wrong Movement
             </span>
             <span className="bg-blue-700 text-white px-6 py-1 rounded font-bold">
-  {summary.wrong}
-</span>
+              {summary.wrong}
+            </span>
           </div>
         </div>
 
@@ -237,44 +237,44 @@ useEffect(() => {
           </div>
 
           {sourceDestData.map((row, index) => (
-  <motion.div
-    key={index}
-    whileHover={{ backgroundColor: "#f1f5f9" }}
-    className="grid grid-cols-3 p-3 border-b"
-  >
-    <span className="font-semibold">{row.Source}</span>
-    <span className="font-semibold">{row.Destination}</span>
+            <motion.div
+              key={index}
+              whileHover={{ backgroundColor: "#f1f5f9" }}
+              className="grid grid-cols-3 p-3 border-b"
+            >
+              <span className="font-semibold">{row.Source}</span>
+              <span className="font-semibold">{row.Destination}</span>
 
-    <div className="w-full bg-gray-200 rounded h-5">
-      <div
-        className="h-5 bg-blue-600 rounded text-xs text-white text-right pr-2"
-        style={{ width: `${row.MovementCount * 15}%` }}
-      >
-        {row.MovementCount}
-      </div>
-    </div>
-  </motion.div>
-))}
+              <div className="w-full bg-gray-200 rounded h-5">
+                <div
+                  className="h-5 bg-blue-600 rounded text-xs text-white text-right pr-2"
+                  style={{ width: `${row.MovementCount * 15}%` }}
+                >
+                  {row.MovementCount}
+                </div>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         {/* ---------- LOCATION WISE BAR CHART ---------- */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-         <ChartCard
-  title="Duplicate Movement – Location Wise"
-  data={duplicateLocationChart}
-/>
           <ChartCard
-  title="Wrong Movement – Location Wise"
-  data={wrongLocationChart}
-/>
+            title="Duplicate Movement – Location Wise"
+            data={duplicateLocationChart}
+          />
+          <ChartCard
+            title="Wrong Movement – Location Wise"
+            data={wrongLocationChart}
+          />
         </div>
-<div className="flex justify-end w-full">
-  <div className="flex items-center gap-4  bg-white p-2 rounded-xl shadow-md w-full justify-end border  ml-auto ">
- <h2 className="font-bold text-black p-4 flex-grow">Error Movement History Table  </h2>
+        <div className="flex justify-end w-full">
+          <div className="flex items-center gap-4  bg-white p-2 rounded-xl shadow-md w-full justify-end border  ml-auto ">
+            <h2 className="font-bold text-black p-4 flex-grow">Error Movement History Table  </h2>
 
- 
-    {/* Status Filter */}
-    <select
+
+            {/* Status Filter */}
+            <select
               className="border rounded-lg px-8 py-2"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -287,8 +287,8 @@ useEffect(() => {
               ))}
             </select>
 
-    {/* Move Type Filter */}
-    <select
+            {/* Move Type Filter */}
+            <select
               className="border rounded-lg px-8 py-2"
               value={moveTypeFilter}
               onChange={(e) => setMoveTypeFilter(e.target.value)}
@@ -302,8 +302,8 @@ useEffect(() => {
             </select>
 
 
-    {/* Sort */}
-     <select
+            {/* Sort */}
+            <select
               className="border rounded-lg px-8 py-2"
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
@@ -312,48 +312,50 @@ useEffect(() => {
               <option value="asc">Oldest First</option>
             </select>
 
-  </div>
-</div>
+          </div>
+        </div>
 
         {/* ---------- HISTORY TABLE ---------- */}
         <div className="bg-white rounded-xl shadow-md  max-h-[350px] overflow-y-auto">
           <table className="w-full text-sm ">
             <thead className="bg-blue-600 text-white sticky top-0 z-0">
               <tr>
+                <th className="p-2">Date</th>
                 <th className="p-2">Trolley ID</th>
                 <th className="p-2">Source</th>
                 <th className="p-2">Destination</th>
                 <th className="p-2">Movement Status</th>
                 <th className="p-2">Movement Type</th>
-                <th className="p-2">Date</th>
+
               </tr>
             </thead>
             <tbody>
-  {loading ? (
-    <tr>
-      <td colSpan="5" className="p-4 text-center font-semibold">
-        Loading data...
-      </td>
-    </tr>
-  ) : filteredData.length === 0 ? (
-    <tr>
-      <td colSpan="5" className="p-4 text-center font-semibold">
-        No records found
-      </td>
-    </tr>
-  ) : (
-    filteredData.map((row, i) => (
-      <tr key={i} className="border-b hover:bg-gray-100">
-        <td className="p-2 text-center">{row.trolleyId}</td>
-        <td className="p-2 text-center">{row.source}</td>
-        <td className="p-2 text-center">{row.destination}</td>
-         <td className="p-2 text-center">{row.MovementStatus}</td>
-        <td className="p-2 text-center">{row.MovementType}</td>
-        <td className="p-2 text-center">{row.date}</td>
-      </tr>
-    ))
-  )}
-</tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="5" className="p-4 text-center font-semibold">
+                    Loading data...
+                  </td>
+                </tr>
+              ) : filteredData.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="p-4 text-center font-semibold">
+                    No records found
+                  </td>
+                </tr>
+              ) : (
+                filteredData.map((row, i) => (
+                  <tr key={i} className="border-b hover:bg-gray-100">
+                    <td className="p-2 text-center">{row.date}</td>
+                    <td className="p-2 text-center">{row.trolleyId}</td>
+                    <td className="p-2 text-center">{row.source}</td>
+                    <td className="p-2 text-center">{row.destination}</td>
+                    <td className="p-2 text-center">{row.MovementStatus}</td>
+                    <td className="p-2 text-center">{row.MovementType}</td>
+
+                  </tr>
+                ))
+              )}
+            </tbody>
           </table>
         </div>
 

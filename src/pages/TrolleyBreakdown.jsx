@@ -22,65 +22,65 @@ const TrolleyBreakdown = () => {
   const [chartData, setChartData] = useState([]);
   const [tableData, setTableData] = useState([]);
 
-const BASE = (import.meta.env.VITE_BACKEND_BASE_URL || "").replace(/\/+$/, "");
+  const BASE = (import.meta.env.VITE_BACKEND_BASE_URL || "").replace(/\/+$/, "");
 
   // ---------------- API CALL ----------------
- // ---------------- API CALL ----------------
-const applyFilter = async () => {
-  if (!rangeStart || !rangeEnd) {
-    alert("Please select both start & end date");
-    return;
-  }
-
-  try {
-    setLoading(true);
-
-    // 🔥 CALL ALL THREE APIs IN PARALLEL
-    const [chartRes, cardRes, detailsRes] = await Promise.all([
-      axios.post(`${BASE}/Breakdown/breakdownduration`, {
-        StartDate: rangeStart,
-        EndDate: rangeEnd,
-      }),
-      axios.post(`${BASE}/Breakdown/dashboard/bd-cards`, {
-        StartDate: rangeStart,
-        EndDate: rangeEnd,
-      }),
-      axios.post(`${BASE}/Breakdown/breakdown/details`, {
-        StartDate: rangeStart,
-        EndDate: rangeEnd,
-      }),
-    ]);
-
-    // --------- CHART DATA ---------
-    if (chartRes.data.success) {
-      const formatted = chartRes.data.data.map((item) => ({
-        label: item.Label,
-        Duration:
-          item.BreakdownMinutes !== undefined
-            ? Number(item.BreakdownMinutes)
-            : Number(item.BreakdownHours * 60),
-        Occurrence: Number(item.OccurrenceCount),
-      }));
-      setChartData(formatted);
+  // ---------------- API CALL ----------------
+  const applyFilter = async () => {
+    if (!rangeStart || !rangeEnd) {
+      alert("Please select both start & end date");
+      return;
     }
 
-    // --------- SUMMARY CARDS ---------
-    if (cardRes.data.success) {
-      setBdCards(cardRes.data.data);
-    }
+    try {
+      setLoading(true);
 
-    // --------- BREAKDOWN DETAILS TABLE ---------
-    if (detailsRes.data.success) {
-      setTableData(detailsRes.data.data); // dynamic table data
-    }
+      // 🔥 CALL ALL THREE APIs IN PARALLEL
+      const [chartRes, cardRes, detailsRes] = await Promise.all([
+        axios.post(`${BASE}/Breakdown/breakdownduration`, {
+          StartDate: rangeStart,
+          EndDate: rangeEnd,
+        }),
+        axios.post(`${BASE}/Breakdown/dashboard/bd-cards`, {
+          StartDate: rangeStart,
+          EndDate: rangeEnd,
+        }),
+        axios.post(`${BASE}/Breakdown/breakdown/details`, {
+          StartDate: rangeStart,
+          EndDate: rangeEnd,
+        }),
+      ]);
 
-  } catch (error) {
-    console.error("Dashboard API Error:", error);
-    alert("Failed to load dashboard data");
-  } finally {
-    setLoading(false);
-  }
-};
+      // --------- CHART DATA ---------
+      if (chartRes.data.success) {
+        const formatted = chartRes.data.data.map((item) => ({
+          label: item.Label,
+          Duration:
+            item.BreakdownMinutes !== undefined
+              ? Number(item.BreakdownMinutes)
+              : Number(item.BreakdownHours * 60),
+          Occurrence: Number(item.OccurrenceCount),
+        }));
+        setChartData(formatted);
+      }
+
+      // --------- SUMMARY CARDS ---------
+      if (cardRes.data.success) {
+        setBdCards(cardRes.data.data);
+      }
+
+      // --------- BREAKDOWN DETAILS TABLE ---------
+      if (detailsRes.data.success) {
+        setTableData(detailsRes.data.data); // dynamic table data
+      }
+
+    } catch (error) {
+      console.error("Dashboard API Error:", error);
+      alert("Failed to load dashboard data");
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   return (
@@ -155,9 +155,9 @@ const applyFilter = async () => {
                 {bdCards.MaxBD_Duration} hrs
               </p>
             </div>
-<div className="bg-white shadow rounded-xl p-4 text-center">
+            <div className="bg-white shadow rounded-xl p-4 text-center">
               <h3 className="font-semibold text-black">
-               Average Breakdown Duration
+                Average Breakdown Duration
               </h3>
               <p className="mt-2 text-black">{bdCards.AvgBD} hrs</p>
             </div>
@@ -181,15 +181,15 @@ const applyFilter = async () => {
             <h3 className="font-semibold text-black text-center mb-4">
               Breakdown Duration
             </h3>
-           <ResponsiveContainer width="100%" height="100%">
-  <BarChart data={chartData}>
-    <CartesianGrid strokeDasharray="3 3" />
-    <XAxis dataKey="label" />
-    <YAxis />
-    <Tooltip />
-    <Bar dataKey="Duration" fill="#2563eb" />
-  </BarChart>
-</ResponsiveContainer>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="label" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="Duration" fill="#2563eb" />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
 
           <div className="h-90 bg-white rounded-xl shadow-md p-10">
@@ -197,58 +197,63 @@ const applyFilter = async () => {
               Breakdown Occurrence
             </h3>
             <ResponsiveContainer width="100%" height="100%">
-  <BarChart data={chartData}>
-    <CartesianGrid strokeDasharray="3 3" />
-    <XAxis dataKey="label" />
-    <YAxis />
-    <Tooltip />
-    <Bar dataKey="Occurrence" fill="#f97316" />
-  </BarChart>
-</ResponsiveContainer>
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="label" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="Occurrence" fill="#f97316" />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
         {/* ---------------- TABLE ---------------- */}
-<div className="bg-white p-4 rounded-xl shadow-md mt-10">
-  <h3 className="text-black font-bold mb-4 text-center">
-    Breakdown Details Table
-  </h3>
+        <div className="bg-white p-4 rounded-xl shadow-md mt-10">
+          <h3 className="text-black font-bold mb-4 text-center">
+            Breakdown Details Table
+          </h3>
 
-  <div style={{ maxHeight: 420, overflow: "auto" }}>
-    <table className="w-full border-collapse">
-      <thead className="bg-blue-700 text-white text-sm sticky top-0 text-black">
-        <tr>
-          <th className="p-2 border">TrolleyID</th>
-          <th className="p-2 border">ActionTaken</th>
-          <th className="p-2 border">ActionRemark</th>
-          <th className="p-2 border">Reason</th>
-          <th className="p-2 border">Remark</th>
-          <th className="p-2 border">StartTime</th>
-          <th className="p-2 border">EndTime</th>
-          <th className="p-2 border">Duration</th>
-          <th className="p-2 border">UserID</th>
-        </tr>
-      </thead>
-      <tbody>
-        {tableData.map((r, i) => (
-          <tr
-            key={i}
-            className="border-b hover:bg-blue-50 text-sm transition-all duration-200 text-black"
-          >
-            <td className="p-2 border text-center">{r.TrolleyID}</td>
-            <td className="p-2 border text-center">{r.ActionTaken}</td>
-            <td className="p-2 border text-center">{r.ActionRemark}</td>
-            <td className="p-2 border text-center">{r.BDReason}</td>
-            <td className="p-2 border text-center">{r.BDRemark}</td>
-            <td className="p-2 border text-center">{r.StartTime}</td>
-            <td className="p-2 border text-center">{r.EndTime}</td>
-            <td className="p-2 border text-center">{r.Duration}</td>
-            <td className="p-2 border text-center">{r.UserID}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
+          <div style={{ maxHeight: 420, overflow: "auto" }}>
+            <table className="w-full border-collapse">
+              <thead className="bg-blue-700 text-white text-sm sticky top-0 text-black">
+                <tr>
+                  <th className="p-2 border">TrolleyID</th>
+                  <th className="p-2 border">Reason</th>
+                  <th className="p-2 border">Operator Remark</th>
+
+                  <th className="p-2 border">StartTime</th>
+                  <th className="p-2 border">EndTime</th>
+                  <th className="p-2 border">ActionTaken</th>
+                  <th className="p-2 border">ActionRemark</th>
+
+
+                  <th className="p-2 border">Duration</th>
+                  <th className="p-2 border">UserID</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tableData.map((r, i) => (
+                  <tr
+                    key={i}
+                    className="border-b hover:bg-blue-50 text-sm transition-all duration-200 text-black"
+                  >
+                    <td className="p-2 border text-center">{r.TrolleyID}</td>
+                    <td className="p-2 border text-center">{r.BDReason}</td>
+                    <td className="p-2 border text-center">{r.BDRemark}</td>
+
+                    <td className="p-2 border text-center">{r.StartTime}</td>
+                    <td className="p-2 border text-center">{r.EndTime}</td>
+                    <td className="p-2 border text-center">{r.ActionTaken}</td>
+                    <td className="p-2 border text-center">{r.ActionRemark}</td>
+
+                    <td className="p-2 border text-center">{r.Duration}</td>
+                    <td className="p-2 border text-center">{r.UserID}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
       </div>
     </DashboardLayout>

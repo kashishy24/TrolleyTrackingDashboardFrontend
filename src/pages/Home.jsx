@@ -45,7 +45,7 @@ const ProgressBar = ({ value }) => {
 
 
 /* ------------------ STAT CARD ------------------ */
-const StatCard = ({ title, items, icon: Icon }) => (
+const StatCard = ({ title, items, icon: Icon ,iconColor = "text-blue-600" }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
@@ -54,7 +54,7 @@ const StatCard = ({ title, items, icon: Icon }) => (
     className="bg-white rounded-xl shadow-md p-4 hover:shadow-xl text-black"
   >
     <div className="flex items-center gap-2 mb-3 justify-center">
-      <Icon className="text-blue-600 text-xl" />
+    <Icon className={`${iconColor} text-xl`} />
       <h3 className="text-sm font-semibold">{title}</h3>
     </div>
 
@@ -142,74 +142,74 @@ const Home = () => {
   const [abnormalSummary, setAbnormalSummary] = useState({ duplicate: 0, wrong: 0 });
   const [duplicateLocation, setDuplicateLocation] = useState([]);
   const [wrongLocation, setWrongLocation] = useState([]);
-const [todayAbnormalMovements, setTodayAbnormalMovements] = useState([]);
+  const [todayAbnormalMovements, setTodayAbnormalMovements] = useState([]);
 
   /* ------------------ API CALLS ------------------ */
- useEffect(() => {
-  const loadDashboard = async () => {
-    try {
-      /* ---------- LIVE STATUS ---------- */
-      const liveRes = await api.get("/Home/TrolleyLiveStatus");
-      setLiveStatus(liveRes.data.data);
+  useEffect(() => {
+    const loadDashboard = async () => {
+      try {
+        /* ---------- LIVE STATUS ---------- */
+        const liveRes = await api.get("/Home/TrolleyLiveStatus");
+        setLiveStatus(liveRes.data.data);
 
-      /* ---------- HOURLY LOCATION SUMMARY ---------- */
-      const hourlyRes = await api.get("/Home/TrolleyLocationHourlySummary");
+        /* ---------- HOURLY LOCATION SUMMARY ---------- */
+        const hourlyRes = await api.get("/Home/TrolleyLocationHourlySummary");
 
-      const byLocation = {};
-      hourlyRes.data.data.forEach(loc => {
-        byLocation[loc.locationName] = loc.hourly;
-      });
+        const byLocation = {};
+        hourlyRes.data.data.forEach(loc => {
+          byLocation[loc.locationName] = loc.hourly;
+        });
 
-      const hours = byLocation["Customer"]?.map(h => h.hour) || [];
+        const hours = byLocation["Customer"]?.map(h => h.hour) || [];
 
-      const merged = hours.map((hour, idx) => ({
-        hour,
-        customerToEmptyStore: byLocation["Empty"]?.[idx]?.value || 0,
-        EmptystoreToProduction: byLocation["Production"]?.[idx]?.value || 0,
-        productionToFGStore: byLocation["FG Store"]?.[idx]?.value || 0,
-        FGStoreToCustomer: byLocation["Customer"]?.[idx]?.value || 0,
-      }));
+        const merged = hours.map((hour, idx) => ({
+          hour,
+          customerToEmptyStore: byLocation["Empty"]?.[idx]?.value || 0,
+          EmptystoreToProduction: byLocation["Production"]?.[idx]?.value || 0,
+          productionToFGStore: byLocation["FG Store"]?.[idx]?.value || 0,
+          FGStoreToCustomer: byLocation["Customer"]?.[idx]?.value || 0,
+        }));
 
-      setHourlyTrend(merged);
+        setHourlyTrend(merged);
 
-      /* ---------- DUP / WRONG SUMMARY ---------- */
-      const abnormalRes = await api.get("/Home/TrolleyTotalDuplicateWrongMovement");
-      setAbnormalSummary({
-        duplicate: abnormalRes.data.data.DuplicateMovement,
-        wrong: abnormalRes.data.data.WrongMovement,
-      });
+        /* ---------- DUP / WRONG SUMMARY ---------- */
+        const abnormalRes = await api.get("/Home/TrolleyTotalDuplicateWrongMovement");
+        setAbnormalSummary({
+          duplicate: abnormalRes.data.data.DuplicateMovement,
+          wrong: abnormalRes.data.data.WrongMovement,
+        });
 
-      /* ---------- TODAY WRONG / DUPLICATE MOVEMENT TABLE ---------- */
-const todayAbnormalRes = await api.get(
-  "/Home/wrong-duplicate-movement/today"
-);
+        /* ---------- TODAY WRONG / DUPLICATE MOVEMENT TABLE ---------- */
+        const todayAbnormalRes = await api.get(
+          "/Home/wrong-duplicate-movement/today"
+        );
 
-setTodayAbnormalMovements(todayAbnormalRes.data.data || []);
+        setTodayAbnormalMovements(todayAbnormalRes.data.data || []);
 
-      /* ---------- DUP / WRONG LOCATION WISE ---------- */
-      const locWiseRes = await api.get("/Home/TrolleyDupWrongMovementLocationWise");
+        /* ---------- DUP / WRONG LOCATION WISE ---------- */
+        const locWiseRes = await api.get("/Home/TrolleyDupWrongMovementLocationWise");
 
-      setDuplicateLocation(
-        locWiseRes.data.data.duplicate.map(d => ({
-          name: d.LocationName,
-          value: d.DuplicateCount,
-        }))
-      );
+        setDuplicateLocation(
+          locWiseRes.data.data.duplicate.map(d => ({
+            name: d.LocationName,
+            value: d.DuplicateCount,
+          }))
+        );
 
-      setWrongLocation(
-        locWiseRes.data.data.wrong.map(w => ({
-          name: w.LocationName,
-          value: w.WrongCount,
-        }))
-      );
+        setWrongLocation(
+          locWiseRes.data.data.wrong.map(w => ({
+            name: w.LocationName,
+            value: w.WrongCount,
+          }))
+        );
 
-    } catch (error) {
-      console.error("Dashboard API error:", error);
-    }
-  };
+      } catch (error) {
+        console.error("Dashboard API error:", error);
+      }
+    };
 
-  loadDashboard();
-}, []);
+    loadDashboard();
+  }, []);
 
 
   if (!liveStatus) return null;
@@ -258,7 +258,7 @@ setTodayAbnormalMovements(todayAbnormalRes.data.data || []);
           { label: "FG Store", value: liveStatus.locationStatus.FGStore },
           { label: "Production", value: liveStatus.locationStatus.Production },
           { label: "Customer", value: liveStatus.locationStatus.Customer },
-          { label: "Maintenance4", value: liveStatus.locationStatus.Maintenance },
+          { label: "Maintenance", value: liveStatus.locationStatus.Maintenance },
         ]}
           className="bg-white rounded-xl shadow-md p-4 hover:shadow-xl text-black"
         />
@@ -270,7 +270,7 @@ setTodayAbnormalMovements(todayAbnormalRes.data.data || []);
           { label: "Scrap", value: liveStatus.locationStatus.Scrap },
         ]} />
 
-          
+
 
         <StatCard title="By PM Status" icon={MdBuild} items={[
           { label: "Normal", value: liveStatus.locationStatus.PM_Normal },
@@ -279,15 +279,16 @@ setTodayAbnormalMovements(todayAbnormalRes.data.data || []);
           { label: "Alarm", value: liveStatus.locationStatus.PM_Alarm },
           { label: "Execution", value: liveStatus.locationStatus.PM_Execution },
           { label: "Completed", value: liveStatus.pmCompletedToday },
-        ]} /> 
-
-
-        <StatCard title="Trolley Breakdown" icon={MdWarning} items={[
-          { label: "Total Breakdown", value: liveStatus.breakdown.TotalBreakdown },
-          { label: "Under Maintenance", value: liveStatus.breakdown.UnderMaintenance },
-          { label: "Repaired Today", value: liveStatus.repairedToday },
-          { label: "Scrapped Today", value: liveStatus.locationStatus.Scrap },
         ]} />
+
+
+        <StatCard title="Trolley Breakdown" icon={MdWarning}
+          iconColor="text-red-600" items={[
+            { label: "Total Breakdown", value: liveStatus.breakdown.TotalBreakdown },
+            { label: "Under Maintenance", value: liveStatus.breakdown.UnderMaintenance },
+            { label: "Repaired Today", value: liveStatus.repairedToday },
+            { label: "Scrapped Today", value: liveStatus.locationStatus.Scrap },
+          ]} />
       </div>
 
       {/* CHARTS */}
@@ -431,38 +432,38 @@ setTodayAbnormalMovements(todayAbnormalRes.data.data || []);
         </div>
 
         {/* TABLE */}
-    {/* TABLE */}
-<div className="mt-6 bg-white rounded-xl shadow-md overflow-hidden">
-  <div className="grid grid-cols-3 bg-blue-100 text-black font-bold p-3">
-    <span>Source</span>
-    <span>Destination</span>
-    <span>Movement Count</span>
-  </div>
+        {/* TABLE */}
+        <div className="mt-6 bg-white rounded-xl shadow-md overflow-hidden">
+          <div className="grid grid-cols-3 bg-blue-100 text-black font-bold p-3">
+            <span>Source</span>
+            <span>Destination</span>
+            <span>Duplicate/Wrong Movement Count</span>
+          </div>
 
-  {todayAbnormalMovements.length === 0 ? (
-    <div className="p-4 text-center text-gray-500">
-      No abnormal movement today
-    </div>
-  ) : (
-    todayAbnormalMovements.map((row, index) => (
-      <motion.div
-        key={index}
-        whileHover={{ backgroundColor: "#f1f5f9" }}
-        className="grid grid-cols-3 items-center p-3 border-b text-sm"
-      >
-        <span className="text-black font-semibold">
-          {row.Source}
-        </span>
+          {todayAbnormalMovements.length === 0 ? (
+            <div className="p-4 text-center text-gray-500">
+              No abnormal movement today
+            </div>
+          ) : (
+            todayAbnormalMovements.map((row, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ backgroundColor: "#f1f5f9" }}
+                className="grid grid-cols-3 items-center p-3 border-b text-sm"
+              >
+                <span className="text-black font-semibold">
+                  {row.Source}
+                </span>
 
-        <span className="text-black font-semibold">
-          {row.Destination}
-        </span>
+                <span className="text-black font-semibold">
+                  {row.Destination}
+                </span>
 
-        <ProgressBar value={row.MovementCount} />
-      </motion.div>
-    ))
-  )}
-</div>
+                <ProgressBar value={row.MovementCount} />
+              </motion.div>
+            ))
+          )}
+        </div>
 
       </div>
       {/* Location Wise Charts */}

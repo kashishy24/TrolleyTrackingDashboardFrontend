@@ -4,20 +4,20 @@ import DashboardLayout from "../partials/DashboardLayout";
 /* --------- DUMMY DATA --------- */
 const STATUS_COLORS = {
   PM_STATUS: {
-    Normal: "bg-green-100 text-green-700",
+    Normal: "bg-green-700 text-green-900",
     Alert: "bg-yellow-100 text-yellow-700",
     Warning: "bg-orange-100 text-orange-700",
     Alarm: "bg-red-100 text-red-700",
   },
 
   MOVEMENT_STATUS: {
-    OK: "bg-green-100 text-green-700",
+    OK: "bg-green-700 text-green-900",
     NOK: "bg-red-100 text-red-700",
     Duplicate: "bg-orange-100 text-orange-700",
   },
 
   TROLLEY_STATUS: {
-    OK: "bg-green-100 text-green-700",
+    OK: "bg-green-700 text-green-900",
     Maintenance: "bg-yellow-100 text-yellow-700",
     PM: "bg-blue-100 text-blue-700",
     Scrap: "bg-red-100 text-red-700",

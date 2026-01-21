@@ -132,7 +132,7 @@ const PMStatus = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-lg font-semibold rounded-full bg-white outline mb-4 p-4 text-center"
         >
-          Preventive Maintenance Plan
+          Preventive Maintenance Scheduled Plan
         </motion.h1>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -171,11 +171,33 @@ const PMStatus = () => {
         </div>
 
         {/* ---------- Date Filters ---------- */}
-        <div className="bg-white p-4 rounded-xl shadow-md flex justify-end gap-4">
+        {/* <div className="bg-white p-4 rounded-xl shadow-md flex justify-end gap-4">
+          
           <input type="date" onChange={e => setStartDate(e.target.value)} />
           <input type="date" onChange={e => setEndDate(e.target.value)} />
-        </div>
+        </div> */}
+{/* ---------- Date Filters ---------- */}
+<div className="bg-white p-4 rounded-xl shadow-md flex items-center justify-between">
+  
+  {/* Left Header */}
+  <h2 className="text-lg font-semibold text-gray-700">
+    Preventive Maintenance Plan Details
+  </h2>
 
+  {/* Right Filters */}
+  <div className="flex gap-4">
+    <input
+      type="date"
+      onChange={e => setStartDate(e.target.value)}
+      className="border rounded-md px-2 py-1"
+    />
+    <input
+      type="date"
+      onChange={e => setEndDate(e.target.value)}
+      className="border rounded-md px-2 py-1"
+    />
+  </div>
+</div>
         {/* ---------- Table ---------- */}
         <div className="bg-white rounded-xl shadow-md p-4">
           <table className="w-full text-sm">

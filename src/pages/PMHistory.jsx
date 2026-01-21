@@ -40,15 +40,15 @@ const PMHistory = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [trolleyId, setTrolleyId] = useState("");
-   /* ---------- TREND STATE ---------- */
+  /* ---------- TREND STATE ---------- */
   const [trendData, setTrendData] = useState([]);
   const [loadingTrend, setLoadingTrend] = useState(false);
   /* ---------- Table STATE ---------- */
   const [tableData, setTableData] = useState([]);
-const [loadingTable, setLoadingTable] = useState(false);
+  const [loadingTable, setLoadingTable] = useState(false);
 
 
-const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
+  const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
   /* ---------- KPI STATE ---------- */
   const [kpiData, setKpiData] = useState({
     avg: 0,
@@ -59,7 +59,7 @@ const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
     delayed: 0,
   });
 
- 
+
 
   /* ================= KPI API ================= */
   useEffect(() => {
@@ -123,32 +123,32 @@ const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
   }, [startDate, endDate]);
 
   useEffect(() => {
-  if (!startDate || !endDate) return;
+    if (!startDate || !endDate) return;
 
-  const fetchHistoryTable = async () => {
-    setLoadingTable(true);
-    try {
-      const res = await axios.post(
-        `${BASE_URL}/PMHistory/dashboard/pm-history-table`,
-        {
-          StartDate: startDate,
-          EndDate: endDate,
-          TrolleyID: trolleyId || null,
+    const fetchHistoryTable = async () => {
+      setLoadingTable(true);
+      try {
+        const res = await axios.post(
+          `${BASE_URL}/PMHistory/dashboard/pm-history-table`,
+          {
+            StartDate: startDate,
+            EndDate: endDate,
+            TrolleyID: trolleyId || null,
+          }
+        );
+
+        if (res.data.success) {
+          setTableData(res.data.data);
         }
-      );
-
-      if (res.data.success) {
-        setTableData(res.data.data);
+      } catch (err) {
+        console.error("PM History Table Error:", err);
+      } finally {
+        setLoadingTable(false);
       }
-    } catch (err) {
-      console.error("PM History Table Error:", err);
-    } finally {
-      setLoadingTable(false);
-    }
-  };
+    };
 
-  fetchHistoryTable();
-}, [startDate, endDate, trolleyId]);
+    fetchHistoryTable();
+  }, [startDate, endDate, trolleyId]);
 
 
   /* ================= FILTER TABLE ================= */
@@ -230,9 +230,9 @@ const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
             </ResponsiveContainer>
           )}
         </div>
- {/* ---------- TROLLEY FILTER ---------- */}
+        {/* ---------- TROLLEY FILTER ---------- */}
         <div className="flex justify-end p-2 bg-white rounded-xl shadow-md w-full">
-              <h2 className="font-bold text-black p-4 flex-grow"> Preventive Maintenance Checklist History Table  </h2>
+          <h2 className="font-bold text-black p-4 flex-grow"> Preventive Maintenance Checklist History Table  </h2>
           <h1 className="mr-4 self-center text-black font-semibold bg-white p-2 pl-10 pr-10 rounded-lg border outline">Trolley ID -:</h1>
           <input
             type="text"
@@ -249,40 +249,44 @@ const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
               <tr>
                 <th className="p-2">Trolley ID</th>
                 <th className="p-2">Checklist</th>
+                <th className="p-2">PM Number</th>
                 <th className="p-2">Start Time</th>
-                <th className="p-2">Instance</th>
-                <th className="p-2">Remark</th>
-                <th className="p-2">Executed By</th>
                 <th className="p-2">End Time</th>
+                <th className="p-2">Executed By</th>
+
+                <th className="p-2">Remark</th>
+
+
               </tr>
             </thead>
-           <tbody>
-  {loadingTable ? (
-    <tr>
-      <td colSpan="7" className="p-4 text-center text-gray-500">
-        Loading...
-      </td>
-    </tr>
-  ) : tableData.length === 0 ? (
-    <tr>
-      <td colSpan="7" className="p-4 text-center text-gray-500">
-        No data found
-      </td>
-    </tr>
-  ) : (
-    tableData.map((row, i) => (
-      <tr key={i} className="border-b hover:bg-gray-100 text-black text-center">
-        <td className="p-2">{row.TrolleyID}</td>
-        <td className="p-2">{row.CheckListName}</td>
-        <td className="p-2">{row.StartTime}</td>
-        <td className="p-2">{row.Instance}</td>
-        <td className="p-2">{row.Remark}</td>
-        <td className="p-2">{row.ExecutedBy}</td>
-        <td className="p-2">{row.PMDate}</td>
-      </tr>
-    ))
-  )}
-</tbody>
+            <tbody>
+              {loadingTable ? (
+                <tr>
+                  <td colSpan="7" className="p-4 text-center text-gray-500">
+                    Loading...
+                  </td>
+                </tr>
+              ) : tableData.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="p-4 text-center text-gray-500">
+                    No data found
+                  </td>
+                </tr>
+              ) : (
+                tableData.map((row, i) => (
+                  <tr key={i} className="border-b hover:bg-gray-100 text-black text-center">
+                    <td className="p-2">{row.TrolleyID}</td>
+                    <td className="p-2">{row.CheckListName}</td>
+                    <td className="p-2">{row.Instance}</td>
+                    <td className="p-2">{row.StartTime}</td>
+                    <td className="p-2">{row.PMDate}</td>
+
+                    <td className="p-2">{row.ExecutedBy}</td>
+                    <td className="p-2">{row.Remark}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
 
           </table>
         </div>

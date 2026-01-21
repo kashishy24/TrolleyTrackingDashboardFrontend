@@ -304,7 +304,7 @@ setTodayAbnormalMovements(todayAbnormalRes.data.data || []);
 
 
       <div className="mt-8 pl-10 pr-4 mb-8">
-        <h2 className="text-lg font-semibold rounded-full bg-white outline text-gray-800 mb-4 p-4 justify-center text-center">
+        <h2 className="text-lg font-semibold rounded-full bg-blue-100 outline text-gray-800 mb-4 p-4 justify-center text-center">
           🚚 Trolley Movement
         </h2>
 
@@ -407,7 +407,7 @@ setTodayAbnormalMovements(todayAbnormalRes.data.data || []);
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-lg font-semibold rounded-full bg-white text-gray-800 mb-4 p-4 outline justify-center text-center"
+          className="text-lg font-semibold rounded-full bg-blue-100 text-gray-800 mb-4 p-4 outline justify-center text-center"
         >
           🚚 Trolley Abnormal Movement
         </motion.div>
@@ -430,7 +430,6 @@ setTodayAbnormalMovements(todayAbnormalRes.data.data || []);
           </div>
         </div>
 
-        {/* TABLE */}
     {/* TABLE */}
 <div className="mt-6 bg-white rounded-xl shadow-md overflow-hidden">
   <div className="grid grid-cols-3 bg-blue-100 text-black font-bold p-3">

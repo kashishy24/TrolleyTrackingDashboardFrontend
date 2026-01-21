@@ -104,7 +104,7 @@ const PMStatus = () => {
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-lg font-semibold rounded-full bg-white outline mb-4 p-4 text-center"
+          className="text-lg font-semibold rounded-full bg-blue-100 text-gray-800 outline mb-4 p-4 text-center"
         >
           Preventive Maintenance Status
         </motion.h1>
@@ -130,7 +130,7 @@ const PMStatus = () => {
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-lg font-semibold rounded-full bg-white outline mb-4 p-4 text-center"
+          className="text-lg font-semibold rounded-full bg-blue-100 text-gray-800 outline mb-4 p-4 text-center"
         >
           Preventive Maintenance Plan
         </motion.h1>

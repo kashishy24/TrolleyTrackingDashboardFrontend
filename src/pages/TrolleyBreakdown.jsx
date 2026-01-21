@@ -178,14 +178,14 @@ const TrolleyBreakdown = () => {
         {/* ---------------- CHARTS ---------------- */}
         <div className="grid grid-cols-1 gap-8">
           <div className="h-90 bg-white rounded-xl shadow-md p-10">
-            <h3 className="font-semibold text-black text-center mb-4">
+            <h3 className="font-bold text-black text-center mb-4">
               Breakdown Duration
             </h3>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="label" />
-                <YAxis />
+                <XAxis dataKey="label" tick={{ fill: "#000", fontWeight: 300 , fontSize: 14 }}/>
+                <YAxis tick={{ fill: "#000", fontWeight: 300 , fontSize: 14 }} />
                 <Tooltip />
                 <Bar dataKey="Duration" fill="#2563eb" />
               </BarChart>
@@ -193,14 +193,14 @@ const TrolleyBreakdown = () => {
           </div>
 
           <div className="h-90 bg-white rounded-xl shadow-md p-10">
-            <h3 className="font-semibold text-black text-center mb-4">
+            <h3 className="font-bold text-black text-center mb-4">
               Breakdown Occurrence
             </h3>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="label" />
-                <YAxis />
+                <XAxis dataKey="label" tick={{ fill: "#000", fontWeight: 300 , fontSize: 14 }} />
+                <YAxis tick={{ fill: "#000", fontWeight: 300 , fontSize: 14 }}/>
                 <Tooltip />
                 <Bar dataKey="Occurrence" fill="#f97316" />
               </BarChart>

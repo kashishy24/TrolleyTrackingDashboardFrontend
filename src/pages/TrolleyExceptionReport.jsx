@@ -378,8 +378,8 @@ const ChartCard = ({ title, data }) => (
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" tick={{ fill: "#000", fontWeight: 300 }} />
-          <YAxis tick={{ fill: "#000", fontWeight: 300 }} />
+          <XAxis dataKey="name" tick={{ fill: "#000", fontWeight: 300 , fontSize: 15 }} />
+          <YAxis tick={{ fill: "#000", fontWeight: 300 , fontSize: 15 }} />
           <Tooltip />
           <Bar dataKey="value" fill="#2563eb" radius={[6, 6, 0, 0]} />
         </BarChart>

@@ -225,10 +225,11 @@ const PMHistory = () => {
                   angle={-35}
                   textAnchor="end"
                   height={60}
+                  tick={{ fill: "#000", fontWeight: 300 , fontSize: 14 }}
                 />
-                <YAxis allowDecimals={false} />
+                <YAxis allowDecimals={false} tick={{ fill: "#000", fontWeight: 300 , fontSize: 14 }}/>
                 <Tooltip />
-                <Legend />
+                <Legend/>
                 <Line
                   type="monotone"
                   dataKey="plan"

@@ -55,13 +55,13 @@ const StatCard = ({ title, items, icon: Icon ,iconColor = "text-blue-600" }) => 
   >
     <div className="flex items-center gap-2 mb-3 justify-center">
     <Icon className={`${iconColor} text-xl`} />
-      <h3 className="text-sm font-semibold">{title}</h3>
+      <h3 className="text-m  font-bold">{title}</h3>
     </div>
 
     <div className="space-y-2 text-sm">
       {items.map((item, index) => (
         <div key={index} className="flex justify-between bg-blue-50 px-3 py-1 rounded">
-          <span>{item.label}</span>
+          <span className="font-semibold ">{item.label}</span>
           <span className="font-semibold">{item.value}</span>
         </div>
       ))}
@@ -79,13 +79,13 @@ const ChartCard = ({ title, data, barColor }) => (
     viewport={{ once: true }}
     className="bg-white rounded-xl shadow-md p-4 text-center"
   >
-    <h3 className="text-sm font-semibold mb-3">{title}</h3>
+    <h3 className="font-semibold text-center mb-2 text-black">{title}</h3>
     <div className="h-56">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-          <XAxis dataKey="name" />
-          <YAxis />
+          <XAxis dataKey="name" tick={{ fill: "#000", fontWeight: 300 , fontSize: 15 }}/>
+          <YAxis tick={{ fill: "#000", fontWeight: 300 , fontSize: 15 }}/>
           <Tooltip />
           <Bar dataKey="value" fill={barColor} radius={[6, 6, 0, 0]} />
         </BarChart>
@@ -105,7 +105,7 @@ const VerticalBarCard = ({ title, data, barColor }) => (
     viewport={{ once: true }}
     className="bg-white rounded-xl shadow-md p-5"
   >
-    <h3 className="text-m font-bold mb-4 text-black text-center">
+    <h3 className="font-bold text-center mb-2 text-black">
       {title}
     </h3>
 
@@ -113,8 +113,8 @@ const VerticalBarCard = ({ title, data, barColor }) => (
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-          <XAxis dataKey="name" tick={{ fill: "#000", fontWeight: 300 }} />
-          <YAxis allowDecimals={false} tick={{ fill: "#000", fontWeight: 300 }} />
+          <XAxis dataKey="name" tick={{ fill: "#000", fontWeight: 300 , fontSize: 15 }} />
+          <YAxis allowDecimals={false} tick={{ fill: "#000", fontWeight: 300 , fontSize: 15 }} />
           <Tooltip />
 
           <Bar
@@ -376,7 +376,7 @@ const Home = () => {
           viewport={{ once: true }}
           className="bg-white rounded-xl shadow-lg p-6 mt-6"
         >
-          <h3 className="text-md font-semibold text-black text-center mb-4">
+          <h3 className="font-bold text-center mb-2 text-black mb-4">
             ⏱️ Hourly Movement Trend
           </h3>
           <ResponsiveContainer width="100%" height={300}>
@@ -385,10 +385,10 @@ const Home = () => {
               <XAxis dataKey="hour"
                 interval={0} // ensures all labels show and are evenly spaced
                 padding={{ left: 10, right: 10 }} // reduce extra padding
-                tick={{ fill: "#000", fontWeight: 300 }}
+                tick={{ fill: "#000", fontWeight: 300, fontSize: 15 }}
               />
               <YAxis domain={['dataMin - 5', 'dataMax + 5']} // optional, tighten Y-axis
-                tick={{ fill: "#000", fontWeight: 300 }} />
+                tick={{ fill: "#000", fontWeight: 300, fontSize: 15 }} />
               <Tooltip />
               <Line type="monotone" dataKey="customerToEmptyStore" stroke="#2563eb" strokeWidth={3}
                 name="Customer → Empty Store" />

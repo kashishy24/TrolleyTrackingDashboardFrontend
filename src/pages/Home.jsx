@@ -305,7 +305,7 @@ const Home = () => {
 
 
       <div className="mt-8 pl-10 pr-4 mb-8">
-        <h2 className="text-lg font-semibold rounded-full bg-white outline text-gray-800 mb-4 p-4 justify-center text-center">
+        <h2 className="text-lg font-semibold rounded-full bg-blue-100 outline text-gray-800 mb-4 p-4 justify-center text-center">
           🚚 Trolley Movement
         </h2>
 
@@ -408,7 +408,7 @@ const Home = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-lg font-semibold rounded-full bg-white text-gray-800 mb-4 p-4 outline justify-center text-center"
+          className="text-lg font-semibold rounded-full bg-blue-100 text-gray-800 mb-4 p-4 outline justify-center text-center"
         >
           🚚 Trolley Abnormal Movement
         </motion.div>
@@ -439,6 +439,13 @@ const Home = () => {
             <span>Destination</span>
             <span>Duplicate/Wrong Movement Count</span>
           </div>
+    {/* TABLE */}
+<div className="mt-6 bg-white rounded-xl shadow-md overflow-hidden">
+  <div className="grid grid-cols-3 bg-blue-100 text-black font-bold p-3">
+    <span>Source</span>
+    <span>Destination</span>
+    <span>Movement Count</span>
+  </div>
 
           {todayAbnormalMovements.length === 0 ? (
             <div className="p-4 text-center text-gray-500">

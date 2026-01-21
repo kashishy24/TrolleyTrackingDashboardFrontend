@@ -34,10 +34,10 @@ const TrolleyExceptionReport = () => {
   /* -------- SOURCE → DEST TABLE -------- */
   const [sourceDestData, setSourceDestData] = useState([]);
 
-  /* -------- LOCATION WISE CHARTS -------- */
-  const [duplicateLocationChart, setDuplicateLocationChart] = useState([]);
-  const [wrongLocationChart, setWrongLocationChart] = useState([]);
-  // Dynamic filter options
+/* -------- LOCATION WISE CHARTS -------- */
+const [duplicateLocationChart, setDuplicateLocationChart] = useState([]);
+const [wrongLocationChart, setWrongLocationChart] = useState([]);
+ // Dynamic filter options
   const [statusOptions, setStatusOptions] = useState([]);
   const [moveTypeOptions, setMoveTypeOptions] = useState([]);
 
@@ -89,8 +89,8 @@ const TrolleyExceptionReport = () => {
         setApiData(mappedData);
 
         // Set filter options dynamically
-        setStatusOptions([...new Set(mappedData.map((d) => d.MovementStatus))]);
-        setMoveTypeOptions([...new Set(mappedData.map((d) => d.MovementType))]);
+        // setStatusOptions([...new Set(mappedData.map((d) => d.MovementStatus))]);
+        // setMoveTypeOptions([...new Set(mappedData.map((d) => d.MovementType))]);
       } catch (error) {
         console.error("API Error:", error);
         setApiData([]);
@@ -272,9 +272,9 @@ const TrolleyExceptionReport = () => {
           <div className="flex items-center gap-4  bg-white p-2 rounded-xl shadow-md w-full justify-end border  ml-auto ">
             <h2 className="font-bold text-black p-4 flex-grow">Error Movement History Table  </h2>
 
-
-            {/* Status Filter */}
-            <select
+ 
+    {/* Status Filter */}
+    <select
               className="border rounded-lg px-8 py-2"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
@@ -287,8 +287,8 @@ const TrolleyExceptionReport = () => {
               ))}
             </select>
 
-            {/* Move Type Filter */}
-            <select
+    {/* Move Type Filter */}
+    <select
               className="border rounded-lg px-8 py-2"
               value={moveTypeFilter}
               onChange={(e) => setMoveTypeFilter(e.target.value)}

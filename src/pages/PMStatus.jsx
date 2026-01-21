@@ -97,39 +97,39 @@ const PMStatus = () => {
   ];
 
   const today = new Date().toLocaleDateString("en-GB", {
-  day: "2-digit",
-  month: "short",
-  year: "numeric",
-});
-const [selectedStatus, setSelectedStatus] = useState("All");
-const statusOrder = {
-  Normal: 1,
-  Alert: 2,
-  Warning: 3,   // agar backend me "Warring" ho to yaha same rakho
-  Alarm: 4,
-  Execution: 5,
-};
-const filteredTableData = tableData
-  .filter(row => {
-    if (selectedStatus === "All") return true;
-    return row.Status === selectedStatus;
-  })
-  .sort((a, b) => {
-    return (
-      (statusOrder[a.Status] || 99) -
-      (statusOrder[b.Status] || 99)
-    );
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
   });
+  const [selectedStatus, setSelectedStatus] = useState("All");
+  const statusOrder = {
+    Normal: 1,
+    Alert: 2,
+    Warning: 3,   // agar backend me "Warring" ho to yaha same rakho
+    Alarm: 4,
+    Execution: 5,
+  };
+  const filteredTableData = tableData
+    .filter(row => {
+      if (selectedStatus === "All") return true;
+      return row.Status === selectedStatus;
+    })
+    .sort((a, b) => {
+      return (
+        (statusOrder[a.Status] || 99) -
+        (statusOrder[b.Status] || 99)
+      );
+    });
 
   return (
     <DashboardLayout>
       <div className="text-black px-8 space-y-6">
-<div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
 
-  <div className="text-sm font-bold text-black-700 bg-white px-20 py-4 outline text-center rounded-full shadow">
-   📅 Current Date -: {today}
-  </div>
-</div>
+          <div className="text-sm font-bold text-black-700 bg-white px-20 py-4 outline text-center rounded-full shadow">
+            📅 Current Date -: {today}
+          </div>
+        </div>
         {/* ---------- Title ---------- */}
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
@@ -206,56 +206,36 @@ const filteredTableData = tableData
           <input type="date" onChange={e => setStartDate(e.target.value)} />
           <input type="date" onChange={e => setEndDate(e.target.value)} />
         </div> */}
-{/* ---------- Date Filters ---------- */}
-<div className="bg-white p-4 rounded-xl shadow-md flex items-center justify-between">
-  
-  {/* Left Header */}
-  <h2 className="text-lg font-semibold text-gray-700">
-    Preventive Maintenance Plan Details
-  </h2>
-
-  {/* Right Filters */}
-  <div className="flex gap-4">
-    <input
-      type="date"
-      onChange={e => setStartDate(e.target.value)}
-      className="border rounded-md px-2 py-1"
-    />
-    <input
-      type="date"
-      onChange={e => setEndDate(e.target.value)}
-      className="border rounded-md px-2 py-1"
-    />
-  </div>
-</div>
+        {/* ---------- Date Filters ---------- */}
+   
         <div className="bg-white p-4 rounded-xl shadow-md flex flex-wrap justify-end gap-4 items-center">
-<h2 className="font-bold text-black p-4 flex-grow"> Preventive Maintenance Schedule Table  </h2>
+          <h2 className="font-bold text-black p-4 flex-grow"> Preventive Maintenance Schedule Table  </h2>
           <select
-    value={selectedStatus}
-    onChange={e => setSelectedStatus(e.target.value)}
-    className="border rounded px-10 py-1 bg-white"
-  >
-    <option value="All">All Status</option>
-    <option value="Normal">Normal</option>
-    <option value="Alert">Alert</option>
-    <option value="Warning">Warning</option>
-    <option value="Alarm">Alarm</option>
-    <option value="Execution">Execution</option>
-  </select>
-  <input
-    type="date"
-    onChange={e => setStartDate(e.target.value)}
-    className="border rounded px-3 py-1"
-  />
+            value={selectedStatus}
+            onChange={e => setSelectedStatus(e.target.value)}
+            className="border rounded px-10 py-1 bg-white"
+          >
+            <option value="All">All Status</option>
+            <option value="Normal">Normal</option>
+            <option value="Alert">Alert</option>
+            <option value="Warning">Warning</option>
+            <option value="Alarm">Alarm</option>
+            <option value="Execution">Execution</option>
+          </select>
+          <input
+            type="date"
+            onChange={e => setStartDate(e.target.value)}
+            className="border rounded px-3 py-1"
+          />
 
-  <input
-    type="date"
-    onChange={e => setEndDate(e.target.value)}
-    className="border rounded px-3 py-1"
-  />
+          <input
+            type="date"
+            onChange={e => setEndDate(e.target.value)}
+            className="border rounded px-3 py-1"
+          />
 
-  
-</div>
+
+        </div>
 
         {/* ---------- Table ---------- */}
         <div className="bg-white rounded-xl shadow-md p-4">
@@ -268,30 +248,30 @@ const filteredTableData = tableData
                 <th className="p-2">Status</th>
               </tr>
             </thead>
-          <tbody>
-  {filteredTableData.map((row, idx) => (
-    <tr key={idx} className="border-b hover:bg-gray-50">
-      <td className="p-2 text-center">TR-{row.TrolleyID}</td>
-      <td className="p-2 text-center">
-        {row.LastPM?.slice(0, 10)}
-      </td>
-      <td className="p-2 text-center">
-        {row.NextPMDue?.slice(0, 10)}
-      </td>
-      <td
-        className={`p-2 text-center font-bold
+            <tbody>
+              {filteredTableData.map((row, idx) => (
+                <tr key={idx} className="border-b hover:bg-gray-50">
+                  <td className="p-2 text-center">TR-{row.TrolleyID}</td>
+                  <td className="p-2 text-center">
+                    {row.LastPM?.slice(0, 10)}
+                  </td>
+                  <td className="p-2 text-center">
+                    {row.NextPMDue?.slice(0, 10)}
+                  </td>
+                  <td
+                    className={`p-2 text-center font-bold
           ${row.Status === "Normal" && "text-green-600"}
           ${row.Status === "Alert" && "text-orange-500"}
           ${row.Status === "Warning" && "text-yellow-600"}
           ${row.Status === "Alarm" && "text-red-600"}
           ${row.Status === "Execution" && "text-blue-600"}
         `}
-      >
-        {row.Status}
-      </td>
-    </tr>
-  ))}
-</tbody>
+                  >
+                    {row.Status}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
 

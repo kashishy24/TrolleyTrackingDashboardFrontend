@@ -439,13 +439,6 @@ const Home = () => {
             <span>Destination</span>
             <span>Duplicate/Wrong Movement Count</span>
           </div>
-    {/* TABLE */}
-<div className="mt-6 bg-white rounded-xl shadow-md overflow-hidden">
-  <div className="grid grid-cols-3 bg-blue-100 text-black font-bold p-3">
-    <span>Source</span>
-    <span>Destination</span>
-    <span>Movement Count</span>
-  </div>
 
           {todayAbnormalMovements.length === 0 ? (
             <div className="p-4 text-center text-gray-500">

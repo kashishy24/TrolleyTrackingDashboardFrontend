@@ -38,8 +38,10 @@ const TrolleyExceptionReport = () => {
 const [duplicateLocationChart, setDuplicateLocationChart] = useState([]);
 const [wrongLocationChart, setWrongLocationChart] = useState([]);
  // Dynamic filter options
-  const [statusOptions, setStatusOptions] = useState([]);
-  const [moveTypeOptions, setMoveTypeOptions] = useState([]);
+  // const [statusOptions, setStatusOptions] = useState([]);
+  // const [moveTypeOptions, setMoveTypeOptions] = useState([]);
+const MOVEMENT_STATUS_OPTIONS = ["OK", "NOK", "Duplicate"];
+const MOVEMENT_TYPE_OPTIONS = ["RFID", "MobileDevice"];
 
   const filteredData = useMemo(() => {
     let data = [...apiData];
@@ -275,31 +277,31 @@ const [wrongLocationChart, setWrongLocationChart] = useState([]);
  
     {/* Status Filter */}
     <select
-              className="border rounded-lg px-8 py-2"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="">All Status</option>
-              {statusOptions.map((status) => (
-                <option key={status} value={status}>
-                  {status}
-                </option>
-              ))}
-            </select>
+  className="border rounded-lg px-8 py-2"
+  value={moveTypeFilter}
+  onChange={(e) => setMoveTypeFilter(e.target.value)}
+>
+  <option value="">All Move Types</option>
+  {MOVEMENT_TYPE_OPTIONS.map((type) => (
+    <option key={type} value={type}>
+      {type}
+    </option>
+  ))}
+</select>
 
     {/* Move Type Filter */}
     <select
-              className="border rounded-lg px-8 py-2"
-              value={moveTypeFilter}
-              onChange={(e) => setMoveTypeFilter(e.target.value)}
-            >
-              <option value="">All Move Types</option>
-              {moveTypeOptions.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
+  className="border rounded-lg px-8 py-2"
+  value={statusFilter}
+  onChange={(e) => setStatusFilter(e.target.value)}
+>
+  <option value="">All Status</option>
+  {MOVEMENT_STATUS_OPTIONS.map((status) => (
+    <option key={status} value={status}>
+      {status}
+    </option>
+  ))}
+</select>
 
 
             {/* Sort */}

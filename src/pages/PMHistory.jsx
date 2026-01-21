@@ -105,7 +105,7 @@ const PMHistory = () => {
 
         if (res.data.success) {
           const formatted = res.data.data.map((d) => ({
-            day: d.Day,
+            period: d.Period,   // 🔥 unified key
             plan: d.Plan,
             actual: d.Actual,
           }));
@@ -217,17 +217,35 @@ const PMHistory = () => {
           {loadingTrend ? (
             <p className="text-center text-gray-500">Loading trend...</p>
           ) : (
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={320}>
               <LineChart data={trendData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" />
-                <YAxis />
+                <XAxis
+                  dataKey="period"
+                  angle={-35}
+                  textAnchor="end"
+                  height={60}
+                />
+                <YAxis allowDecimals={false} />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="plan" stroke="#1e40af" />
-                <Line type="monotone" dataKey="actual" stroke="#f97316" />
+                <Line
+                  type="monotone"
+                  dataKey="plan"
+                  stroke="#1e40af"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="actual"
+                  stroke="#f97316"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
+                />
               </LineChart>
             </ResponsiveContainer>
+
           )}
         </div>
         {/* ---------- TROLLEY FILTER ---------- */}
@@ -243,53 +261,61 @@ const PMHistory = () => {
           />
         </div>
         {/* ================= TABLE ================= */}
-        <div className="bg-white rounded-xl shadow-md p-4">
-          <table className="w-full text-sm">
-            <thead className="bg-blue-600 text-white">
-              <tr>
-                <th className="p-2">Trolley ID</th>
-                <th className="p-2">Checklist</th>
-                <th className="p-2">PM Number</th>
-                <th className="p-2">Start Time</th>
-                <th className="p-2">End Time</th>
-                <th className="p-2">Executed By</th>
+      {/* ================= TABLE ================= */}
+{/* ================= TABLE ================= */}
+<div className="bg-white rounded-xl shadow-md p-4">
 
-                <th className="p-2">Remark</th>
+  {/* SCROLL CONTAINER */}
+  <div className="max-h-80 overflow-y-auto">
 
+    <table className="w-full text-sm border-collapse">
+      <thead className="bg-blue-600 text-white sticky top-0 z-10">
+        <tr>
+          <th className="p-2 text-center">Trolley ID</th>
+          <th className="p-2 text-center">Checklist</th>
+          <th className="p-2 text-center">PM Number</th>
+          <th className="p-2 text-center">Start Time</th>
+          <th className="p-2 text-center">End Time</th>
+          <th className="p-2 text-center">Executed By</th>
+          <th className="p-2 text-center">Remark</th>
+        </tr>
+      </thead>
 
-              </tr>
-            </thead>
-            <tbody>
-              {loadingTable ? (
-                <tr>
-                  <td colSpan="7" className="p-4 text-center text-gray-500">
-                    Loading...
-                  </td>
-                </tr>
-              ) : tableData.length === 0 ? (
-                <tr>
-                  <td colSpan="7" className="p-4 text-center text-gray-500">
-                    No data found
-                  </td>
-                </tr>
-              ) : (
-                tableData.map((row, i) => (
-                  <tr key={i} className="border-b hover:bg-gray-100 text-black text-center">
-                    <td className="p-2">{row.TrolleyID}</td>
-                    <td className="p-2">{row.CheckListName}</td>
-                    <td className="p-2">{row.Instance}</td>
-                    <td className="p-2">{row.StartTime}</td>
-                    <td className="p-2">{row.PMDate}</td>
+      <tbody>
+        {loadingTable ? (
+          <tr>
+            <td colSpan="7" className="p-4 text-center text-gray-500">
+              Loading...
+            </td>
+          </tr>
+        ) : tableData.length === 0 ? (
+          <tr>
+            <td colSpan="7" className="p-4 text-center text-gray-500">
+              No data found
+            </td>
+          </tr>
+        ) : (
+          tableData.map((row, i) => (
+            <tr
+              key={i}
+              className="border-b hover:bg-gray-100 text-black text-center"
+            >
+              <td className="p-2">{row.TrolleyID}</td>
+              <td className="p-2">{row.CheckListName}</td>
+              <td className="p-2">{row.Instance}</td>
+              <td className="p-2">{row.StartTime}</td>
+              <td className="p-2">{row.PMDate}</td>
+              <td className="p-2">{row.ExecutedBy}</td>
+              <td className="p-2">{row.Remark}</td>
+            </tr>
+          ))
+        )}
+      </tbody>
+    </table>
 
-                    <td className="p-2">{row.ExecutedBy}</td>
-                    <td className="p-2">{row.Remark}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
+  </div>
+</div>
 
-          </table>
-        </div>
 
       </div>
     </DashboardLayout>

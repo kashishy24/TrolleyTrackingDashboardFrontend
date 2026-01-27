@@ -22,50 +22,49 @@ const PMStatus = () => {
     alarm: 0,
   });
 
-const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState([]);
 
-const [selectedGroup, setSelectedGroup] = useState("All");
+  const [selectedGroup, setSelectedGroup] = useState("All");
 
-const trolleyGroups = React.useMemo(() => {
-  return [...new Set(
-    tableData
-      .map(row => row.TrolleyGroupId)
-      .filter(v => v !== null && v !== undefined)
-  )];
-}, [tableData]);
+  const trolleyGroups = React.useMemo(() => {
+    return [...new Set(
+      tableData
+        .map(row => row.TrolleyGroupId)
+        .filter(v => v !== null && v !== undefined)
+    )];
+  }, [tableData]);
   const [pmPlan, setPmPlan] = useState({
     day: 0,
     week: 0,
     month: 0,
     year: 0,
   });
-
-  // const [startDate, setStartDate] = useState("");
-  // const [endDate, setEndDate] = useState("");
+  const [pmActual, setPmActual] = useState({
+    day: 0,
+    week: 0,
+    month: 0,
+    year: 0,
+  });
 
   /* ------------------ API CALLS ------------------ */
   useEffect(() => {
-  fetchPMStatus();
-  fetchPMPlan();
-  fetchPMDetails();
-}, []);
+    fetchPMStatus();
+    fetchPMPlan();
+    fetchPMActual();
+    fetchPMDetails();
+  }, []);
 
-  // useEffect(() => {
-  //   if (startDate && endDate) {
-  //     fetchPMDetails(startDate, endDate);
-  //   }
-  // }, [startDate, endDate]);
 
   const fetchPMStatus = async () => {
     const res = await axios.get(`${BASE_URL}/trolleypmstatus/TrolleypmStatus`);
     setPmStatus(res.data.data);
   };
-const fetchPMDetails = async () => {
-  const res = await axios.get(
-    `${BASE_URL}/trolleypmstatus/TrolleyPMDetails`
-  );
-  setTableData(res.data.data);
-};
+  const fetchPMDetails = async () => {
+    const res = await axios.get(
+      `${BASE_URL}/trolleypmstatus/TrolleyPMDetails`
+    );
+    setTableData(res.data.data);
+  };
 
   const fetchPMPlan = async () => {
     const res = await axios.get(
@@ -73,16 +72,14 @@ const fetchPMDetails = async () => {
     );
     setPmPlan(res.data.data);
   };
+  const fetchPMActual = async () => {
+    const res = await axios.get(
+      `${BASE_URL}/trolleypmstatus/TrolleyPMActualSummary`
+    );
+    setPmActual(res.data.data);
+  };
 
-  // const fetchPMDetails = async (start, end) => {
-  //   const res = await axios.get(
-  //     `${BASE_URL}/trolleypmstatus/TrolleyPMDetails`,
-  //     {
-  //       params: { startDate: start, endDate: end },
-  //     }
-  //   );
-  //   setTableData(res.data.data);
-  // };
+
 
   /* ------------------ CARD DATA ------------------ */
   const statusCards = [
@@ -98,11 +95,11 @@ const fetchPMDetails = async () => {
     { label: "Month", value: pmPlan.month, color: "bg-orange-500" },
     { label: "Year", value: pmPlan.year, color: "bg-red-600" },
   ];
-const ActualCards = [
-    { label: "Day", value:8 , color: "bg-green-500" },
-    { label: "Week", value: 68, color: "bg-yellow-500" },
-    { label: "Month", value:298, color: "bg-orange-500" },
-    { label: "Year", value: 2999, color: "bg-red-600" },
+  const ActualCards = [
+    { label: "Day", value: pmActual.day, color: "bg-green-500" },
+    { label: "Week", value: pmActual.week, color: "bg-yellow-500" },
+    { label: "Month", value: pmActual.month, color: "bg-orange-500" },
+    { label: "Year", value: pmActual.year, color: "bg-red-600" },
   ];
 
   const StatuschartData = [
@@ -118,28 +115,28 @@ const ActualCards = [
     { name: "Month", value: pmPlan.month },
     { name: "Year", value: pmPlan.year },
   ];
-const planVsActualChartData = [
-  {
-    name: "Day",
-    Plan: pmPlan.day,
-    Actual: 8,
-  },
-  {
-    name: "Week",
-    Plan: pmPlan.week,
-    Actual: 68,
-  },
-  {
-    name: "Month",
-    Plan: pmPlan.month,
-    Actual: 298,
-  },
-  {
-    name: "Year",
-    Plan: pmPlan.year,
-    Actual: 2999,
-  },
-];
+  const planVsActualChartData = [
+    {
+      name: "Day",
+      Plan: pmPlan.day,
+      Actual: 8,
+    },
+    {
+      name: "Week",
+      Plan: pmPlan.week,
+      Actual: 68,
+    },
+    {
+      name: "Month",
+      Plan: pmPlan.month,
+      Actual: 298,
+    },
+    {
+      name: "Year",
+      Plan: pmPlan.year,
+      Actual: 2999,
+    },
+  ];
 
   const today = new Date().toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -154,61 +151,51 @@ const planVsActualChartData = [
     Alarm: 4,
     Execution: 5,
   };
-  // const filteredTableData = tableData
-  //   .filter(row => {
-  //     if (selectedStatus === "All") return true;
-  //     return row.Status === selectedStatus;
-  //   })
-  //   .sort((a, b) => {
-  //     return (
-  //       (statusOrder[a.Status] || 99) -
-  //       (statusOrder[b.Status] || 99)
-  //     );
-  //   });
-const filteredTableData = tableData
-  .filter(row => {
-    const statusMatch =
-      selectedStatus === "All" || row.Status === selectedStatus;
 
-    const groupMatch =
-      selectedGroup === "All" || row.TrolleyGroupId == selectedGroup;
+  const filteredTableData = tableData
+    .filter(row => {
+      const statusMatch =
+        selectedStatus === "All" || row.Status === selectedStatus;
 
-    return statusMatch && groupMatch;
-  })
-  .sort((a, b) => {
-    return (
-      (statusOrder[a.Status] || 99) -
-      (statusOrder[b.Status] || 99)
-    );
-  });
+      const groupMatch =
+        selectedGroup === "All" || row.TrolleyGroupId == selectedGroup;
 
-    const groupWiseData = React.useMemo(() => {
-  const groups = {};
+      return statusMatch && groupMatch;
+    })
+    .sort((a, b) => {
+      return (
+        (statusOrder[a.Status] || 99) -
+        (statusOrder[b.Status] || 99)
+      );
+    });
 
-  tableData.forEach((row) => {
-    const groupId = row.TrolleyGroupId || "NA";
+  const groupWiseData = React.useMemo(() => {
+    const groups = {};
 
-    if (!groups[groupId]) {
-      groups[groupId] = {
-        TrolleyGroupID: groupId,
-        TrolleyIDCount: 0,
-        Normal: 0,
-        Warning: 0,
-        Alert: 0,
-        Alarm: 0,
-      };
-    }
+    tableData.forEach((row) => {
+      const groupId = row.TrolleyGroupId || "NA";
 
-    groups[groupId].TrolleyIDCount += 1;
+      if (!groups[groupId]) {
+        groups[groupId] = {
+          TrolleyGroupID: groupId,
+          TrolleyIDCount: 0,
+          Normal: 0,
+          Warning: 0,
+          Alert: 0,
+          Alarm: 0,
+        };
+      }
 
-    if (row.Status === "Normal") groups[groupId].Normal += 1;
-    if (row.Status === "Warning") groups[groupId].Warning += 1;
-    if (row.Status === "Alert") groups[groupId].Alert += 1;
-    if (row.Status === "Alarm") groups[groupId].Alarm += 1;
-  });
+      groups[groupId].TrolleyIDCount += 1;
 
-  return Object.values(groups);
-}, [tableData]);
+      if (row.Status === "Normal") groups[groupId].Normal += 1;
+      if (row.Status === "Warning") groups[groupId].Warning += 1;
+      if (row.Status === "Alert") groups[groupId].Alert += 1;
+      if (row.Status === "Alarm") groups[groupId].Alarm += 1;
+    });
+
+    return Object.values(groups);
+  }, [tableData]);
 
   return (
     <DashboardLayout>
@@ -255,7 +242,7 @@ const filteredTableData = tableData
         </motion.h1>
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-          <p className="bg-white text-l shadow-md rounded-xl text-center flex justify-center items-center font-bold ">PLAN</p>
+          <p className="bg-white text-l shadow-md rounded-xl text-center flex justify-center items-center font-bold ">Plan</p>
           {planCards.map((item, index) => (
             <motion.div
               key={index}
@@ -270,8 +257,8 @@ const filteredTableData = tableData
             </motion.div>
           ))}
         </div>
-<div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-   <p className="bg-white text-l shadow-md rounded-xl text-center flex justify-center items-center font-bold ">Actual</p>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          <p className="bg-white text-l shadow-md rounded-xl text-center flex justify-center items-center font-bold ">Actual</p>
           {ActualCards.map((item, index) => (
             <motion.div
               key={index}
@@ -286,7 +273,7 @@ const filteredTableData = tableData
             </motion.div>
           ))}
         </div>
-        
+
 
         {/* ---------- Charts ---------- */}
         <motion.h1
@@ -297,78 +284,78 @@ const filteredTableData = tableData
           Preventive Maintenance Chart Summary
         </motion.h1>
         {/* ---------- Charts ---------- */}
-<div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-  {/* -------- STATUS CHART -------- */}
-  <div className="bg-white rounded-xl shadow-md p-4">
-    <h2 className="font-bold text-center mb-2">
-      PM Status Distribution
-    </h2>
+          {/* -------- STATUS CHART -------- */}
+          <div className="bg-white rounded-xl shadow-md p-4">
+            <h2 className="font-bold text-center mb-2">
+              PM Status Distribution
+            </h2>
 
-    <div className="h-64">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={StatuschartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" tick={{ fill: "#000", fontWeight: 300, fontSize: 15 }}/>
-          <YAxis tick={{ fill: "#000", fontWeight: 300 , fontSize: 15 }}/>
-          <Tooltip />
-          <Bar dataKey="value" fill="#2563eb" radius={[6, 6, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  </div>
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={StatuschartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" tick={{ fill: "#000", fontWeight: 300, fontSize: 15 }} />
+                  <YAxis tick={{ fill: "#000", fontWeight: 300, fontSize: 15 }} />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#2563eb" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
 
-  {/* -------- PLAN vs ACTUAL CHART -------- */}
-  <div className="bg-white rounded-xl shadow-md p-4">
-    <h2 className="font-bold text-center mb-2">
-      PM Plan vs Actual
-    </h2>
+          {/* -------- PLAN vs ACTUAL CHART -------- */}
+          <div className="bg-white rounded-xl shadow-md p-4">
+            <h2 className="font-bold text-center mb-2">
+              PM Plan vs Actual
+            </h2>
 
-    <div className="h-64">
-    <ResponsiveContainer width="100%" height="100%">
-  <BarChart
-    data={planVsActualChartData}
-    barCategoryGap="20%"
-    barGap={4}
-  >
-    <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="name" tick={{ fill: "#000", fontWeight: 300, fontSize: 15 }}/>
-          <YAxis tick={{ fill: "#000", fontWeight: 300 , fontSize: 15 }}/>
-    <Tooltip />
+            <div className="h-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={planVsActualChartData}
+                  barCategoryGap="20%"
+                  barGap={4}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" tick={{ fill: "#000", fontWeight: 300, fontSize: 15 }} />
+                  <YAxis tick={{ fill: "#000", fontWeight: 300, fontSize: 15 }} />
+                  <Tooltip />
 
-    {/* PLAN BAR → LEFT */}
-    <Bar dataKey="Plan" fill="#2563eb" radius={[6, 6, 0, 0]} />
+                  {/* PLAN BAR → LEFT */}
+                  <Bar dataKey="Plan" fill="#2563eb" radius={[6, 6, 0, 0]} />
 
-    {/* ACTUAL BAR → RIGHT */}
-    <Bar dataKey="Actual" fill="#88c3f1" radius={[6, 6, 0, 0]} />
-  </BarChart>
-</ResponsiveContainer>
+                  {/* ACTUAL BAR → RIGHT */}
+                  <Bar dataKey="Actual" fill="#88c3f1" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
 
-    </div>
-  </div>
+            </div>
+          </div>
 
-</div>
+        </div>
 
 
         {/* ---------- Date Filters ---------- */}
-   
+
         <div className="bg-white p-4 rounded-xl shadow-md flex flex-wrap justify-end gap-4 items-center">
           <h2 className="font-bold text-black p-4 flex-grow"> Preventive Maintenance Schedule Table  </h2>
 
           {/* Trolley Group Filter */}
-  <select
-    value={selectedGroup}
-    onChange={e => setSelectedGroup(e.target.value)}
-    className="border rounded px-10 py-1 bg-white"
-  >
-    <option value="All">All Groups</option>
-    {trolleyGroups.map(groupId => (
-      <option key={groupId} value={groupId}>
-        Group {groupId}
-      </option>
-    ))}
-  </select>
-  
+          <select
+            value={selectedGroup}
+            onChange={e => setSelectedGroup(e.target.value)}
+            className="border rounded px-10 py-1 bg-white"
+          >
+            <option value="All">All Groups</option>
+            {trolleyGroups.map(groupId => (
+              <option key={groupId} value={groupId}>
+                Group {groupId}
+              </option>
+            ))}
+          </select>
+
           <select
             value={selectedStatus}
             onChange={e => setSelectedStatus(e.target.value)}
@@ -386,77 +373,83 @@ const filteredTableData = tableData
         </div>
 
         {/* ---------- Table ---------- */}
+        {/* ---------- Table ---------- */}
         <div className="bg-white rounded-xl shadow-md p-4">
-          <table className="w-full text-sm">
+          <div className="max-h-[400px] overflow-y-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-blue-600 text-white sticky top-0 z-10">
+                <tr>
+                  <th className="p-2">Trolley ID</th>
+                  <th className="p-2">Trolley Group ID</th>
+                  <th className="p-2">Last PM</th>
+                  <th className="p-2">Next PM Due</th>
+                  <th className="p-2">Status</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {filteredTableData.map((row, idx) => (
+                  <tr key={idx} className="border-b hover:bg-gray-50">
+                    <td className="p-2 text-center">{row.TrolleyID}</td>
+                    <td className="p-2 text-center">{row.TrolleyGroupId}</td>
+                    <td className="p-2 text-center">
+                      {row.LastPM?.slice(0, 10)}
+                    </td>
+                    <td className="p-2 text-center">
+                      {row.NextPMDue?.slice(0, 10)}
+                    </td>
+                    <td
+                      className={`p-2 text-center font-bold
+                ${row.Status === "Normal" && "text-green-600"}
+                ${row.Status === "Alert" && "text-orange-500"}
+                ${row.Status === "Warning" && "text-yellow-600"}
+                ${row.Status === "Alarm" && "text-red-600"}
+                ${row.Status === "Execution" && "text-blue-600"}
+              `}
+                    >
+                      {row.Status}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* ---------- TROLLEY GROUP STATUS SUMMARY TABLE ---------- */}
+        <div className="bg-white rounded-xl shadow-md p-4">
+          <h2 className="font-bold text-black mb-4">
+            Trolley Group Wise PM Status Summary
+          </h2>
+          <div className="max-h-[400px] overflow-y-auto">
+          <table className="w-full text-sm border">
             <thead className="bg-blue-600 text-white">
               <tr>
-                <th className="p-2">Trolley ID</th>
                 <th className="p-2">Trolley Group ID</th>
-                <th className="p-2">Last PM</th>
-                <th className="p-2">Next PM Due</th>
-                <th className="p-2">Status</th>
+                <th className="p-2">Trolley Count</th>
+                <th className="p-2">Normal</th>
+                <th className="p-2">Warning</th>
+                <th className="p-2">Alert</th>
+                <th className="p-2">Alarm</th>
               </tr>
             </thead>
+
             <tbody>
-              {filteredTableData.map((row, idx) => (
-                <tr key={idx} className="border-b hover:bg-gray-50">
-                  <td className="p-2 text-center">{row.TrolleyID}</td>
-                   <td className="p-2 text-center">{row.TrolleyGroupId}</td>
-                  <td className="p-2 text-center">
-                    {row.LastPM?.slice(0, 10)}
-                  </td>
-                  <td className="p-2 text-center">
-                    {row.NextPMDue?.slice(0, 10)}
-                  </td>
-                  <td
-                    className={`p-2 text-center font-bold
-          ${row.Status === "Normal" && "text-green-600"}
-          ${row.Status === "Alert" && "text-orange-500"}
-          ${row.Status === "Warning" && "text-yellow-600"}
-          ${row.Status === "Alarm" && "text-red-600"}
-          ${row.Status === "Execution" && "text-blue-600"}
-        `}
-                  >
-                    {row.Status}
-                  </td>
+              {groupWiseData.map((row, idx) => (
+                <tr key={idx} className="border-b text-center hover:bg-gray-50">
+                  <td className="p-2 font-semibold">{row.TrolleyGroupID}</td>
+                  <td className="p-2 font-bold">{row.TrolleyIDCount}</td>
+
+                  <td className="p-2 text-green-600 font-semibold">{row.Normal}</td>
+                  <td className="p-2 text-yellow-600 font-semibold">{row.Warning}</td>
+                  <td className="p-2 text-orange-500 font-semibold">{row.Alert}</td>
+                  <td className="p-2 text-red-600 font-semibold">{row.Alarm}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+          </div>
         </div>
-   {/* ---------- TROLLEY GROUP STATUS SUMMARY TABLE ---------- */}
-<div className="bg-white rounded-xl shadow-md p-4">
-  <h2 className="font-bold text-black mb-4">
-    Trolley Group Wise PM Status Summary
-  </h2>
-
-  <table className="w-full text-sm border">
-    <thead className="bg-blue-600 text-white">
-      <tr>
-        <th className="p-2">Trolley Group ID</th>
-        <th className="p-2">Trolley Count</th>
-        <th className="p-2">Normal</th>
-        <th className="p-2">Warning</th>
-        <th className="p-2">Alert</th>
-        <th className="p-2">Alarm</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {groupWiseData.map((row, idx) => (
-        <tr key={idx} className="border-b text-center hover:bg-gray-50">
-          <td className="p-2 font-semibold">{row.TrolleyGroupID}</td>
-          <td className="p-2 font-bold">{row.TrolleyIDCount}</td>
-
-          <td className="p-2 text-green-600 font-semibold">{row.Normal}</td>
-          <td className="p-2 text-yellow-600 font-semibold">{row.Warning}</td>
-          <td className="p-2 text-orange-500 font-semibold">{row.Alert}</td>
-          <td className="p-2 text-red-600 font-semibold">{row.Alarm}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
       </div>
     </DashboardLayout>
   );
